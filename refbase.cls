@@ -30,7 +30,8 @@
 \ProvidesClass{refbase}
               [1995/11/20 $Revision: 5.10 $
  Document class for Perl Reference Guide]
-\def\tkrev{4.2}
+%\def\tkrev{4.2}
+\def\tkrev{402.003}
 \def\PRGfmtname{Perl Reference Guide}
 \def\PRGfmtversion{$Revision: 5.10 $}
 \everyjob{\typeout{Document class \PRGfmtname\space\PRGfmtversion}}

@@ -48,6 +48,7 @@ INSTALLATION
 	refbase.tex - LaTeX source for the Reference Guide
 	refbase.cls - LaTeX class for the Reference Guide
 	refbase.ps  - pre-generated PostScript base
+	reftk.tex   - LaTex source for Perl/Tk
 	testbase.ps - alignment test page
 	Makefile.psutils - makefile to be used with psutils
 	PROBLEMS    - known problems on certain printers
@@ -123,7 +124,7 @@ INSTALLATION
 
      - Use "make refguide.ps" to create a guide formatted in pages
        of 2-column text. It should be printed double-sided, stapled in
-       the middle, folded, and cut to size to have a 24-page 4.25 x 8"
+       the middle, folded, and cut to size to have a 4.375" x 8"
        booklet. See the "Layout" document.
 
      - Use "make 2pass" to create a set of odd and even pages for
@@ -259,7 +260,7 @@ CREDITS FOR PERL/TK REFERENCE GUIDE
 ===================================
 
 I can't see how I can take credit for anything (-: This guide, of course, may
-be reproduced, printed and distributed freely under the sames terms as Perl
+be reproduced, printed and distributed freely under the same terms as Perl
 itself, but may not be used commercially without my permission.
 
 ---------------------------- author info -----------------------------
