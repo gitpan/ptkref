@@ -1,0 +1,3181 @@
+\section{General Perl/Tk Widget Information} 
+
+All Perl/Tk programs must have a \kwd{use Tk} statement.  To use special Perl/Tk
+widgets like \kwd{Dialog} a \kwd{use Tk::Dialog} statement is required.
+
+All widgets are created with
+
+\quad \quad <\$widget> |=| <\$parent>|->|<widgetClass>(?<-option1> |=>| <value1>, ...?);
+
+where <widgetClass> is the name of the class of 
+widget desired (eg.\ \kwd{Button}) and <parent> is a Perl/Tk widget reference
+of the new widget's parent.  The Perl object reference is stored in \$widget,
+which becomes a child of \$parent, creating the widget hierarchy.
+
+All widget creation commands can have the optional <Name> |=>| <resourceName> 
+parameter to associate a resource database name with the widget.  
+
+Every Perl/Tk program requires a <main window>, the topmost widget in the
+hierarchy, created with
+
+\quad \quad <\$mw> |=| \kwd{MainWindow}|->|\kwd{new};
+
+The following command creates a new button widget \$b and uses the \kwd{grid}
+geometry manager to map it:
+
+\quad \quad <\$b> |=| <\$mw>|->|\kwd{Button}(-text |=>| "Hello World")|->|grid;
+
+Widget configuration options may be passed in the creation method.  Options
+begin with a ``|-|'' and are always followed by a value, usually an integer
+or string, sometimes a Perl scalar, array, hash or code reference.  After
+creation, options may be changed using the \kwd{configure} widget command
+
+\quad \quad <\$widget>|->|\kwd{configure}(<-option1> |=>| <value1>, ...);
+
+and queried using the \kwd{cget} command
+
+\quad \quad <\$widget>|->|\kwd{cget}(<-option>);
+
+The last statement in a Perl/Tk program calls \kwd{MainLoop} to initiate
+event processing.
+
+\subsection*{Perl/Tk Callbacks}
+
+A <callback> is a scalar, either a code reference or a method name as a
+string.  Either of these styles can take parameters by passing an array reference,
+with the first element the code reference or method name, and subsequent
+elements subroutine parameters.
+
+\verb+\+\&subroutine |     | [\verb+\+\&subroutine ?, args?]
+
+sub \{...\} |        | [sub \{...\} ?, args?]
+
+'methodName' |    |  ['methodName' ?, args?]
+
+Note that \kwd{bind} <callbacks> are implicitly passed the bound widget reference
+as the first argument of the parameter list.  Refer to the section <Bindings>
+for related information.
+
+\subsection*{Common Widget Options}
+
+Some of the widget options common to several widgets are described
+here for brevity.
+
+\begin{enum}{1cm}
+
+\Xi{|-activebackground =>| <color>} 
+Background color of widget when it is active.
+
+\Xi{|-activeborderwidth =>| <width>} 
+Width in screen units of widget border when it is active.
+
+\Xi{|-activeforeground =>| <color>} 
+Foreground color of widget when it is active.
+
+\Xi{|-anchor =>| <anchorPos>} 
+How information is positioned inside widget. Valid
+<anchorPos> values are |n, ne, e, se, s, sw, w, nw,| and |center|.
+
+\Xi{|-background =>| <color>} 
+Background color of widget in normal state (Abbrev: |-bg|).
+
+\Xi{|-bitmap =>| <bitmap>} 
+Bitmap to display in the widget ({\tt error, gray12, gray50, gray25,
+hourglass, info, questhead, question, warning, @}<pathName>).
+
+\Xi{|-borderwidth =>| <width>} 
+Width in screen units of widget border in normal state (Abbrev: |-bd|).
+
+\Xi{|-command =>| <callback>} 
+A Perl/Tk callback describing the Perl code to run when widget is invoked.
+
+\Xi{|-cursor =>| [<bitmap, mask, foreground, background>]} 
+An array reference describing the cursor to display when mouse pointer is in widget.
+
+\Xi{|-disabledforeground =>| <color>} 
+Foreground color of widget when it is disabled.
+
+\Xi{|-exportselection =>| <boolean>} 
+Whether or not a selection in the widget should also 
+be the X selection.
+
+\Xi{|-font =>| <font>} 
+Font to use when drawing text inside the widget.
+
+\Xi{|-foreground =>| <color>} 
+Foreground color of widget in normal state (Abbrev: |-fg|).
+
+\Xi{|-geometry =>| <width>|x|<height>} 
+Geometry for the widget's window.  The units for <width> and <height>
+depend on the particular widget (usually in characters when widget has text).
+
+\Xi{|-height =>| <height>\|<textChars>} 
+Height of widget. Units depend on widget.
+
+\Xi{|-highlightbackground =>| <color>} 
+Color of the rectangle drawn around the widget when it does not
+have the input focus.
+
+\Xi{|-highlightcolor =>| <color>} 
+Color of the rectangle drawn around the widget when it has the
+input focus.
+
+\Xi{|-highlightthickness =>| <width>} 
+Width in screen units of highlight rectangle drawn around widget 
+when it has the input focus.
+
+\Xi{|-image =>| <image>} 
+Image to display in the widget (see Images).
+
+\Xi{|-insertbackground =>| <color>} 
+Color to use as background in the area covered by the insertion
+cursor.
+
+\Xi{|-insertborderwidth =>| <width>} 
+Width in screen units of border to draw around the insertion cursor.
+
+\Xi{|-insertofftime =>| <milliseconds>} 
+Time the insertion cursor should remain ``off'' in each blink cycle.
+
+\Xi{|-insertontime =>| <milliseconds>} 
+Time the insertion cursor should remain ``on'' in each blink cycle.
+
+\Xi{|-insertwidth =>| <width>} 
+Width in screen units of the insertion cursor.
+
+\Xi{|-jump =>| <boolean>} 
+Whether to notify scrollbars and scales connected
+to the widget to delay updates until mouse button is released.
+
+\Xi{|-justify =>| |left|\||center|\||right|} 
+How multiple lines line up with each other.
+
+\Xi{|-menuitems =>| [ [<type>, <label> ?, <-option> |=>| <value>?] ]}
+A list of list of menuitem <types>, like \kwd{Button}, with the text
+<label> and optional parameters.  <menuitems> can be nested.
+
+\Xi{|-orient =>| |horizontal|\||vertical|} 
+Which orientation widget should use in layout.
+
+\Xi{|-padx =>| <width>} 
+Extra space in screen units to request for the widget in X-direction.
+
+\Xi{|-pady =>| <height>} 
+Extra space in screen units to request for the widget in Y-direction.
+
+\Xi{|-relief =>| |flat|\||groove|\||raised|\||ridge|\||sunken|} 
+3-D  effect desired for the widget's border.
+
+\Xi{|-repeatdelay =>| <milliseconds>} 
+Time a button or key must be held down before it begins to
+auto-repeat.
+
+\Xi{|-repeatinterval =>| <milliseconds>} 
+Time between auto-repeats once action has begun.
+
+\Xi{|-selectbackground =>| <color>} 
+Background color to use when displaying selected items.
+
+\Xi{|-selectborderwidth =>| <width>} 
+Width in screen units of border to draw around selected items.
+
+\Xi{|-selectforeground =>| <color>} 
+Foreground color to use when displaying selected items.
+
+\Xi{|-setgrid =>| <boolean>} 
+Whether this widget controls the resizing grid for its 
+toplevel  window.
+
+\Xi{|-size =>| <size>} 
+A size in screen units. Values are in pixels unless an optional one letter
+suffix modifier is present --- |c| (cm), |i| (inch), |m| (mm), or |p|
+(points).
+
+\Xi{|-state =>| |normal|\||disabled| (\||active| for button-type widgets)} 
+Current state of widget.
+
+\Xi{|-takefocus =>| <focusType>} 
+If |0| or |1|, signals that the widget should never or always take the focus.
+If empty, Tk decides. Otherwise, evalutes argument as script with widget
+name appended as argument. Returned value must be |0|, |1| or empty.
+
+\Xi{|-text =>| <string>} 
+Text to be displayed inside the  widget.
+
+\Xi{|-textvariable =>| <varRef>} 
+A reference to a Perl scalar variable which contains a text string to be displayed inside
+the widget, or which is modified by the widget.
+
+\Xi{|-troughcolor =>| <color>} 
+Color to use for the rectangular trough areas in widget.
+
+\Xi{|-underline =>| <index>} 
+Integer  index  of  a  character to underline in the widget.
+
+\Xi{|-width =>| <width>\|<textChars>} 
+Width of widget. Units depend on widget.
+
+\Xi{|-wraplength =>| <length>} 
+Maximum  line  length in screen units for word-wrapping.
+
+\Xi{|-xscrollcommand =>| <cmdPrefix>} 
+Prefix for a command used to communicate with horizontal scrollbars.
+
+\Xi{|-yscrollcommand =>| <cmdPrefix>} 
+Prefix for a command used to communicate with vertical scrollbars.
+
+\end{enum}
+
+\section{Perl/Tk Special Variables}
+
+\begin{enum}{1cm}
+ 
+\Xi{|\$Tk::library|}
+Directory containing library of Tk modules, widgets and scripts.
+
+\Xi{|\$Tk::patchLevel|}
+Integer specifying current patch level for Tcl/Tk.
+
+\Xi{|\$Tk::strictMotif|}
+When non-zero, Tk tries to adhere to Motif look-and-feel as closely
+as possible.
+
+\Xi{|\$Tk::version|}
+Current version of Tcl/Tk that Perl/Tk is based on, in <major>.<minor> form.
+
+\Xi{|\$Tk::VERSION|}
+Current version of Perl/Tk.
+
+\end{enum}
+
+\section{Widget Scroll Commands}
+
+The Canvas, Listbox and Text widgets support the following scrolling commands.
+The Entry widget supports the \kwd{xview} command and the \kwd{scan} command 
+with the <y> coordinate dropped.
+
+Refer to the section <Perl/Tk Widgets> and learn how
+Perl/Tk greatly simplifies managing scrollbars.
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$widget}|->|\kwd{scanMark}(<x, y>);}
+Records <x> and <y> as widget's current view anchor.
+
+\Xi{{\it \$widget}|->|\kwd{scanDragto}(<x, y>);}
+Shift the view by 10 times the difference between the coordinates <x>
+and <y> and the current view anchor coordinates.
+
+\Xi{{\it \$widget}|->|\kwd{xview};}
+Return a two element list specifying the fraction of the horizontal span
+of the widget at the left and right edges of the window.
+
+\Xi{{\it \$widget}|->|\kwd{xviewMoveto}(<fraction>);}
+Adjust the view in the window so that <fraction> of the total width
+of the widget is off-screen to the left.
+
+\Xi{{\it \$widget}|->|\kwd{xviewScroll}(<number> |=> units|\||pages|);}
+Shift the view by <number> one-tenth's (|unit|) or nine-tenth's (|pages|)
+the window's width in the horizontal direction. 
+
+\Xi{{\it \$widget}|->|\kwd{yview};}
+Return a two element list specifying the fraction of the vertical span
+of the widget at the top and bottom edges of the window.
+
+\Xi{{\it \$widget}|->|\kwd{yviewMoveto}(<fraction>);}
+Adjust the view in the window so that <fraction> of the total height
+of the widget is off-screen to the top.
+
+\Xi{{\it \$widget}|->|\kwd{yviewScroll}(<number> |=> units|\||pages|);}
+Shift the view by <number> one-tenth's (|unit|) or nine-tenth's (|pages|)
+the window's height in the vertical direction. 
+
+\end{enum}
+
+\vskip5pt
+The Text Widget also supports the following:
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$text}|->|\kwd{yview}(?|-pickplace|,? <index>);}
+Changes view of widget's window to make character at <index> visible. 
+If |-pickplace| is specified, <index> will appear at the top of the window.
+
+\end{enum}
+
+\vskip5pt
+The Entry (\kwd{xview} only) and Listbox widget also supports the following:
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$listbox}|->|\kwd{xview}(<index>);}
+Adjusts view so that character position <index> is at left edge.
+
+\Xi{{\it \$listbox}|->|\kwd{yview}(<index>);}
+Adjusts view so that element at <index> is at top of window.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CANVAS WIDGET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Canvas Widget}
+
+\subsection*{Canvas Options}
+\begin{tabbing}
+|                      |\=|                   |\= \kill
+|-background|          \> |-insertbackground|   \> |-selectborderwidth|  \\
+|-borderwidth|         \> |-insertborderwidth|  \> |-selectforeground| \\
+|-cursor|    	       \> |-insertofftime|      \> |-takefocus|  \\
+|-height|	       \> |-insertontime|       \> |-width| \\
+|-highlightbackground| \> |-insertwidth|        \> |-xscrollcommand|    \\
+|-highlightcolor|      \> |-relief|             \> |-yscrollcommand| \\
+|-highlightthickness|  \> |-selectbackground|  \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-closeenough =>| <float>} 
+How close the mouse cursor must be to an item before it is considered
+to be ``inside'' the item.
+
+\Xi{|-confine =>| <boolean>}  
+Whether it is allowable to set the canvas's view outside the scroll
+region.
+
+\Xi{|-scrollregion =>| [<corners>]}
+List reference of four coordinates describing the left, top, right, and bottom
+of a rectangular scrolling region.
+
+\Xi{|-xscrollincrement =>| <distance>}
+Specifies the increment for horizontal scrolling in screen units.
+
+\Xi{|-yscrollincrement =>| <distance>}
+Specifies the increment for vertical scrolling in screen units.
+
+\end{enum}
+
+\vskip5pt
+Coordinate examples: 5 (pixel), 2.2i (inch), 4.1c (cm), 3m (mm), 21p (pts)
+\begin{enum}{1cm}
+\Xi{} Larger y-coordinates refer to points lower on the  screen.
+\Xi{} Larger x-coordinates refer to points farther to the right.
+\end{enum}
+
+\vskip5pt
+Character positions: '<charIndex>', |'end', 'insert', 'sel.first', 'sel.last'|, '|@|<x>,<y>'
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CANVAS COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Canvas Commands}
+\begin{enum}{1cm}
+
+\Xi{{\it \$canvas}|->|\kwd{addtag}(<tag>, <searchSpec> ?, <arg>, <arg> ...?);}
+Add <tag> to the list  of tags  associated  with each item that 
+satisfy <searchSpec>. See Canvas Search Specs below.
+
+\Xi{{\it \$canvas}|->|\kwd{bbox}(<tagOrId> ?, <tagOrId>  ...?);}
+Returns a list (x1, y1, x2, y2) giving an <approximate> bounding  box 
+for all the items named by the tagOrId arguments.
+
+\Xi{{\it \$canvas}|->|\kwd{bind}(<tagOrId> ?, <sequence> |=>| <callback>?);}
+Associates <callback> to be invoked on events specified with <sequence>
+with the items given by  <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{canvasx}(<screenx> ?, <gridspacing>?);}
+Returns  the  canvas x-coordinate that is displayed at screen x-coordinate
+<screenx> possibly rounding to nearest multiple of <gridspacing> units.
+
+\Xi{{\it \$canvas}|->|\kwd{canvasy}(<screeny> ?, <gridspacing>?);}
+Returns  the  canvas x-coordinate that is displayed at screen y-coordinate
+<screeny> possibly rounding to nearest multiple of <gridspacing> units.
+
+\Xi{{\it \$canvas}|->|\kwd{coords}(<tagOrId> ?, <x0>, <y0> ...?);}
+Query  or  modify  the  coordinates  that define an item.
+
+\Xi{{\it \$canvas}|->|\kwd{create}<Type>(<x>, <y> ?,<x>, <y> ...? ?, <-option>|=>|<value> ...?);}
+Create a new item of type <Type> at specified coordinates and with list
+options.  Currently <Type> may be: \kwd{Arc Bitmap Image Line Oval Polygon
+Rectangle Text Window}.
+
+\Xi{{\it \$canvas}|->|\kwd{dchars}(<tagOrId>, <first> ?, <last>?);}
+For items given by <tagOrId>, delete the characters in the range given 
+by <first> and  <last> (defaults to <first>),  inclusive.
+
+\Xi{{\it \$canvas}|->|\kwd{delete}(?<tagOrId> ...?);}
+Delete each of the items given by each <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{dtag}(<tagOrId> ?, tagToDelete?);}
+Remove tag <tagToDelete> from the taglist of items given by <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{find}(<searchSpec> ?, <arg>, <arg> ...?);}
+Returns a list of the items  that  satisfy the specification <searchSpec>.
+See Canvas Search Specs below.
+
+\Xi{{\it \$canvas}|->|\kwd{focus}(<tagOrId>);}
+Set the focus to the first textual item given by <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{gettags}(<tagOrId>);}
+Return a list of the tags associated with the first item given by <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{icursor}(<tagOrId>, <index>);}
+Set the insertion cursor for the item(s) given by <tagOrId> to just 
+before thecharacter  position <index> .
+
+\Xi{{\it \$canvas}|->|\kwd{index}(<tagOrId>, <index>);}
+Returns a decimal  string  giving  the numerical  index  within  <tagOrId>
+corresponding to character position <index>.
+
+\Xi{{\it \$canvas}|->|\kwd{insert}(<tagOrId>, <beforeThis>, <string>);}
+Insert <string> just before character position <beforeThis> in items
+given by <tagOrId> that support textual insertion.
+
+\Xi{{\it \$canvas}|->|\kwd{itemcget}(<tagOrId>, <-option>);}
+Returns the value <-option> for the item given by <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{itemconfigure}(<tagOrId> ?, <-option> |=>| <value> ...?}
+Modifies  item-specific options for the items given by <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{lower}(<tagOrId> ?, <belowThis>?);}
+Move the items given by <tagOrId> to a new position in the
+display list just before the first item given by <belowThis>.
+
+\Xi{{\it \$canvas}|->|\kwd{move}(<tagOrId, xAmount, yAmount>);}
+Move the items given by <tagOrId> in the canvas coordinate space by
+adding <xAmount> and <yAmount> to each items x and y coordinates, respectively.
+
+\Xi{{\it \$canvas}|->|\kwd{postscript}(?<-option> |=>| <value> ...?);}
+Generate an Encapsulated Postscript representation  for  part  or all  of  the canvas.
+See Canvas Postscript Options below.
+
+\Xi{{\it \$canvas}|->|\kwd{raise}(<tagOrId> ?, <aboveThis>?);}
+Move the items given by <tagOrId> to a new position in the
+display list just after the first item given by <aboveThis>.
+
+\Xi{{\it \$canvas}|->|\kwd{scale}(<tagOrId, xOrigin, yOrigin, xScale, yScale>);}
+Rescale items given by <tagOrId> in canvas coordinate space to change  the
+distance from <xOrigin>,<yOrigin> by a factor of <xScale>,<yScale> respectively.
+
+\Xi{{\it \$canvas}|->|\kwd{scan}(<args>);}
+See Widget Scroll Commands above.
+
+\Xi{{\it \$canvas}|->|\kwd{selectAdjust}(<tagOrId>, <index>);}
+Adjust nearest end of current selection in <tagOrId> to be at <index> and
+set the other end to be the new selection anchor.
+
+\Xi{{\it \$canvas}|->|\kwd{selectClear}; }
+Clear the selection if it is in the widget.
+
+\Xi{{\it \$canvas}|->|\kwd{selectFrom}(<tagOrId>, <index>);}
+Set the selection anchor in <tagOrId> to just before the character at <index>.
+
+\Xi{{\it \$canvas}|->|\kwd{selectItem}; }
+Return id of the selected item. Returns a empty string if there is none.
+
+\Xi{{\it \$canvas}|->|\kwd{selectTo}(<tagOrId>, <index>);}
+Set the selection to extend between <index> and anchor point in <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{type}(<tagOrId>);}
+Returns the type of the first item given by <tagOrId>.
+
+\Xi{{\it \$canvas}|->|\kwd{xview\|yview}(<args>);}
+See Widget Scroll Commands above.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CANVAS SEARCH SPECS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Canvas Search Specifications}
+\begin{enum}{1cm}
+
+\Xi{\kwd{above} |=>| <tagOrId>}
+Selects  the item just after the one given by <tagOrId> in the  display  list.
+
+\Xi{\kwd{all}} 
+Selects all the items in the canvas.
+
+\Xi{\kwd{below} |=>| <tagOrId>}
+Selects  the item just before the one given by <tagOrId> in the  display  list.
+
+\Xi{\kwd{closest} |=>| <x>, <y> ?, <halo>? ?, <start>?}
+Select the topmost, closest item to @<x>,<y> that is below <start> in
+the display list. Any item closer than <halo> to the point is
+considered to overlap it.
+
+\Xi{\kwd{enclosed} |=>| <x1, y1, x2, y2>}
+Selects all the items completely enclosed within <x1, y1, x2, y2>.
+
+\Xi{\kwd{overlapping} |=>| <x1, y1, x2, y2>}
+Selects  all  the  items that overlap or are enclosed within <x1, y1, x2, y2>.
+
+\Xi{\kwd{withtag} |=>| <tagOrId>}
+Selects all the items given by <tagOrId>.
+
+\end{enum}
+\vskip5pt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CANVAS ITEM TYPES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Canvas Item Types}
+
+%% CANVAS: arc
+{\samepage
+{\it \$canvas}|->|\kwd{createArc}(<x1, y1, x2, y2> ?, <-option =\> value> ...?);
+\begin{tabbing}
+|                  |\=|                    |\= \kill
+|-fill =>| <color>     \> |-stipple =>| <bitmap> \> |-width =>| <outlineWidth> \\
+|-outline =>| <color>  \> |-tags =>| <tagList>   \> \\
+\end{tabbing}
+}
+\vspace{-10pt}
+
+\begin{enum}{1cm}
+
+\Xi{|-extent =>| <degrees>}
+Size of the angular range occupied by arc.
+
+\Xi{|-outlinestipple =>| <bitmap>}
+Bitmap stipple to use to draw arc's outline.
+
+\Xi{|-start =>| <degrees>}
+Starting angle measured from 3-o'clock position.
+
+\Xi{|-style =>| |pieslice|\||chord|\||arc|}
+How to ``complete'' the region of the arc.
+
+\end{enum}
+\vskip5pt
+
+%% CANVAS: bitmap
+{\samepage
+
+{\it \$canvas}|->|\kwd{createBitmap}(<x, y> ?, <-option =\> value> ...?);
+\begin{tabbing}
+|                   |\=|                |\= \kill
+|-anchor =>| <anchorPos>  \> |-bitmap =>| <bitmap>    \> |-tags =>| <tagList> \\
+|-background| <color>  \> |-foreground| <color> \> \\
+\end{tabbing}
+}
+
+%% CANVAS: image
+{\samepage
+{\it \$canvas}|->|\kwd{createImage}(<x, y> ?, <-option =\> value> ...?);
+\begin{tabbing}
+|                   |\=|                |\= \kill
+|-anchor =>| <anchorPos> \> |-image =>| <image> \> |-tags =>| <tagList>? \\
+\end{tabbing}
+}
+
+%% CANVAS: line
+{\samepage
+{\it \$canvas}|->|\kwd{createLine}(<x1, y1, ... xN, yN> ?, <-option =\> value> ...?);
+\begin{tabbing}
+|                   |\=|                 |\= \kill
+|-fill =>| <color>        \> |-stipple =>| <bitmap> \> |-width =>| <outlineWidth> \\
+|-smooth =>| <boolean>    \> |-tags =>| <tagList>   \>  \\
+\end{tabbing}
+}
+\vspace{-10pt}
+
+\begin{enum}{1cm}
+
+\Xi{|-arrow =>| |none|\||first|\||last|\||both|}
+Specify on which ends of the line to draw arrows.
+
+\Xi{|-arrowshape =>| <shape>}
+Three element list which describes shape of arrow.
+
+\Xi{|-capstyle =>| |butt|\||projecting|\||round|}
+How to draw caps at endpoints of the line. Default is |butt|.
+
+\Xi{|-joinstyle =>| |bevel|\||miter|\||round|}
+How joints are to be  drawn at vetices. Default is |miter|.
+
+\Xi{|-splinesteps =>| <number>}
+Degree of smoothness desired for  curves.
+
+\end{enum}
+\vskip5pt
+
+%% CANVAS: oval
+{\samepage
+{\it \$canvas}|->|\kwd{createOval}(<x1, y1, x2, y2> ?<, -option =\> value> ...?);
+\begin{tabbing}
+|                |\=|                   |\= \kill
+|-fill =>| <color>        \> |-stipple =>| <bitmap> \> |-width =>| <outlineWidth> \\
+|-outline =>| <color>     \> |-tags =>| <tagList>   \>  \\
+\end{tabbing}
+}
+
+%% CANVAS: polygon
+{\samepage
+{\it \$canvas}|->|\kwd{createPolygon}(<x1, y1, ... xN, yN> ?<, -option =\> value> ...?);
+\begin{tabbing}
+|                |\=|                   |\= \kill
+|-fill =>| <color>    \> |-smooth =>| <boolean> \> |-tags =>| <tagList> \\
+|-outline =>| <color> \> |-stipple =>| <bitmap> \> |-width =>| <outlineWidth> \\
+\end{tabbing}
+}
+\vspace{-10pt}
+
+\begin{enum}{1cm}
+
+\Xi{|-splinesteps =>| <number>}
+Degree of smoothness desired for curved perimeter.
+
+\end{enum}
+\vskip5pt
+
+%% CANVAS: rectanagle
+{\samepage
+{\it \$canvas}|->|\kwd{createRectangle}(<x1, y1, x2, y2> ?, <-option =\> value> ...?);
+\begin{tabbing}
+|                |\=|                   |\= \kill
+|-fill =>| <color>        \> |-stipple =>| <bitmap> \> |-width =>| <outlineWidth> \\
+|-outline =>| <color>     \> |-tags =>| <tagList>   \>  \\
+\end{tabbing}
+}
+
+%% CANVAS: text
+{\samepage
+{\it \$canvas}|->|\kwd{createText}(<x, y> ?, <-option =\> value> ...?);
+\begin{tabbing}
+|                   |\=|                |\= \kill
+|-anchor =>| <anchorPos>  \> |-font =>| <font>      \> |-tags =>| <tagList> \\
+|-fill =>| <color>        \> |-stipple =>| <bitmap> \> |-text =>| <string> \\
+\end{tabbing}
+}
+\vspace{-10pt}
+
+\begin{enum}{1cm}
+
+\Xi{|-justify =>| |left|\||right|\||center|}
+How to justify text within its bounding region.
+
+\Xi{|-width =>| <lineLength>}
+Maximum line length for the text. If zero, break only on $\backslash$n.
+
+\end{enum}
+\vskip5pt
+
+%% CANVAS: window
+{\samepage
+{\it \$canvas}|->|\kwd{createWindow}(<x, y> ?,<-option =\> value> ...?);
+\begin{tabbing}
+|                   |\=|                |\= \kill
+|-anchor =>| <anchorPos>  \> |-tags =>| <tagList> \\
+\end{tabbing}
+}
+\vspace{-10pt}
+
+\begin{enum}{4cm}
+
+\Xi{|-height =>| <height>}
+Height in screen units to assign item's window.
+
+\Xi{|-width =>| <width>}
+Width in screen utnis to assign item's window.
+
+\Xi{|-window =>| <pathName>}
+Window to associate with item.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CANVAS POSTSCRIPT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Canvas Postscript Options}
+\begin{enum}{1cm}
+
+\Xi{|-colormap =>| <varRef>}
+Specifies a color mapping to use where <varRef> is an  array  variable
+whose elements  specify Postscript  code to set a particular color value.
+
+\Xi{|-colormode =>| |color|\||grey|\||mono|}
+Specifies how to output color  information.
+
+\Xi{|-file =>| <pathName>}
+Specifies the name of the file in which  to  write the  Postscript.
+If not specified, the Postscript is returned as the result of the command.
+
+\Xi{|-fontmap =>| <varRef>}
+Specifies a font mapping to use where <varRef> is an  array  variable
+whose elements  specify the Postscript font and size to use as a two element list.
+
+\Xi{|-height =>| <size> }
+Specifies the height of the area of the canvas to print.  Defaults to
+the height of the canvas window
+
+\Xi{|-pageanchor =>| <anchor>}
+Specifies which point of the printed  area  should be  appear  over the 
+positioning point on the page. Defaults to |center|.
+
+\Xi{|-pageheight =>| <size>}
+Specifies that the Postscript should be scaled in both x and y so that
+the printed area is <size> high on the Postscript page.
+
+\Xi{|-pagewidth =>| <size>}
+Specifies that the Postscript should be scaled in both x and y so that
+the printed area is <size> wide on the Postscript page.
+
+\Xi{|-pagex =>| <position>}
+Set the x-coordinate of the positioning point on the page to <position>.
+
+\Xi{|-pagey =>| <position>}
+Set the y-coordinate of the positioning point on the page to <position>.
+
+\Xi{|-rotate =>| <boolean>}
+Whether the printed area is to be rotated 90 degrees. (``landscape'').
+
+\Xi{|-width =>| <size>}
+Specifies the width of the area of the canvas to print.  Defaults to
+the width of the canvas window
+
+\Xi{|-x =>| <position>}
+Set the x-coordinate of the left edge of canvas area to print.
+
+\Xi{|-y =>| <position>}
+Set the y-coordinate of the top edge of canvas area to print.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% ENTRY WIDGET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Entry Widget}
+
+\subsection*{Entry Widget Options}
+\begin{tabbing}
+|                    |\=|                     |\= \kill
+|-background|       \> |-highlightcolor|     \> |-relief| \\
+|-borderwidth|      \> |-highlightthickness| \> |-selectbackground| \\             
+|-cursor|	    \> |-insertbackground|   \> |-selectborderwidth| \\   
+|-exportselection|  \> |-insertborderwidth|  \> |-selectforeground| \\  
+|-font|             \> |-insertofftime|      \> |-state| \\   
+|-foreground|       \> |-insertontime|       \> |-takefocus| \\       
+|-highlightbackground| \> |-insertwidth|     \> |-textvariable| \\              
+ \> |-justify| \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-show| <boolean>} 
+Whether to show actual character or ``*'' in entry.
+
+\end{enum}
+\begin{enum}{2.5cm}
+
+\Xi{Entry Indices:}
+<number>, |'anchor', 'end', 'insert', 'sel.first', 'sel.last'|, '<@x>'
+
+\end{enum}
+
+\subsection*{Entry Widget Commands}
+\begin{enum}{1cm}
+
+\Xi{{\it \$entry}|->|\kwd{bbox}(<index>);} 
+Returns a list (x, y, width, height) giving an <approximate> 
+bounding box of character given by <index>.
+
+\Xi{{\it \$entry}|->|\kwd{delete}(<first> ?, <last>?);} 
+Delete characters from <first> through character just before <last>.
+
+\Xi{{\it \$entry}|->|\kwd{get};} 
+Returns the \$entry's string.
+
+\Xi{{\it \$entry}|->|\kwd{icursor}(<index>);} 
+Display insertion cursor just before character at <index>.
+
+\Xi{{\it \$entry}|->|\kwd{index}(<index>);} 
+Returns the numerical index corresponding to <index>.
+
+\Xi{{\it \$entry}|->|\kwd{insert}(<index>, <string>);} 
+Insert <string> just before character at <index>.
+
+\Xi{{\it \$entry}|->|\kwd{scan}(<-option>, <args>);} 
+See Widget Scroll Commands above.
+
+\Xi{{\it \$entry}|->|\kwd{selectionAdjust}(<index>);} 
+Adjust nearest end of current selection to be at <index> and
+set the other end to the anchor point.
+
+\Xi{{\it \$entry}|->|\kwd{selectionClear};} 
+Clear the selection if currenly in the widget.
+
+\Xi{{\it \$entry}|->|\kwd{selectionFrom}(<index>);} 
+Set the anchor point to be at <index>.
+
+\Xi{{\it \$entry}|->|\kwd{selectionPresent};} 
+Returns 1 is any characters are selected, 0 otherwise.
+
+\Xi{{\it \$entry}|->|\kwd{selectionRange}(<start>, <end>);} 
+Select the characters from <start> through character just before <end>.
+
+\Xi{{\it \$entry}|->|\kwd{selectionTo}(<index>);} 
+Set the selection to extend between <index> and anchor point.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% LISTBOX WIDGET %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Listbox Widget}
+
+\subsection*{Listbox Widget Options}
+\begin{tabbing}
+|                    |\=|                    |\= \kill                    
+|-background|        \> |-height|             \> |-selectborderwidth| \\
+|-borderwidth|       \> |-highlightbackground| \> |-selectforeground| \\
+|-cursor|	     \> |-highlightcolor|     \> |-setGrid| \\         
+|-exportselection|   \> |-highlightthickness| \> |-takefocus| \\
+|-font|              \> |-relief|             \> |-width| \\           
+|-foreground|        \> |-selectbackground|   \> |-xscrollcommand| \\  
+\> \> |-yscrollcommand| \\  
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{3cm}
+
+\Xi{|-selectMode|\quad |single|\||browse|\||multiple|\||extended|}
+
+\Xi{Listbox Indices:} 
+<number> (starts at 0), |'active', 'anchor', 'end'|, '|@|<x>,<y>'
+
+\end{enum}
+ 
+\subsection*{Listbox Widget Commands}
+\begin{enum}{1cm}
+
+\Xi{{\it \$listbox}|->|\kwd{activate}(<index>);}
+Sets the active element to <index>.
+
+\Xi{{\it \$listbox}|->|\kwd{bbox}(<index>);}
+Returns a list (<x, y, width, height>) giving an <approximate> 
+bounding box of character given by <index>.
+
+\Xi{{\it \$listbox}|->|\kwd{curselection};}
+Returns list of indices of all elements currently selected.
+
+\Xi{{\it \$listbox}|->|\kwd{delete}(<index1> ?, <index2>?);}
+Delete range of elements from <index1> to <index2> (defaults to <index1>).
+
+\Xi{{\it \$listbox}|->|\kwd{get}(<index1> ?, <index2>?);}
+Return as a list contents of elements from <index1> to <index2>.
+
+\Xi{{\it \$listbox}|->|\kwd{index}(<index>);}
+Returns position <index> in <number> notation.
+
+\Xi{{\it \$listbox}|->|\kwd{insert}(<index> ?, <element> ...?);}
+Insert specified elements just before element at <index>.
+
+\Xi{{\it \$listbox}|->|\kwd{nearest}(<y>);}
+Return index of element nearest to <y>-coordinate.
+
+\Xi{{\it \$listbox}|->|\kwd{scan}(<args>);}
+See Widget Scroll Commands above.
+
+\Xi{{\it \$listbox}|->|\kwd{selectionAnchor}(<index>);} 
+Set the selection anchor to element at <index>.
+
+\Xi{{\it \$listbox}|->|\kwd{selectionClear}(<first> ?, <last>?);} 
+Deselect elements between <first> and <last> inclusive.
+
+\Xi{{\it \$listbox}|->|\kwd{selectionIncludes}(<index>);} 
+Returns 1 if element at <index> is selected, 0 otherwise.
+
+\Xi{{\it \$listbox}|->|\kwd{selectionSet}(<first> ?,<last>?);} 
+Add all elements between <first> and <last> inclusive to selection.
+
+\Xi{{\it \$listbox}|->|\kwd{see}(<index>);}
+Adjust the view in window so element at <index> is completely visible.
+
+\Xi{{\it \$listbox}|->|\kwd{size}}
+Returns number of elements in listbox.
+
+\Xi{{\it \$listbox}|->|\kwd{xview\|yview}(<args>);}
+See Widget Scroll Commands above.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% MENU WIDGET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Menu Widget}
+
+\subsection*{Menu Widget Options}
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-activebackground|  \> |-borderwidth|        \> |-font| \\
+|-activeborderwidth| \> |-cursor|             \> |-foreground| \\
+|-activeforeground|  \> |-disabledforeground| \> |-relief| \\
+|-background| 	\\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-postcommand =>| <callback>} 
+Specify Perl command to invoke immediately before the menu is posted.
+
+\Xi{|-selectcolor =>| <color>} 
+Specifies indicator color for checkbutton and radiobutton entries.
+
+\Xi{|-tearoff =>| <boolean>} 
+Whether to include a tear-off entry at top of menu.
+
+\Xi{|-tearoffcommand =>| <callback>} 
+Specifies command to be run when menu is torn off. The name of the
+menu and the new torn-off window will be appended on invocation.
+
+\Xi{|-transient =>| <boolean>} 
+Whether menu should be displayed as transient or not.
+
+\end{enum}
+\begin{enum}{2.5cm}
+
+\Xi{Entry Types:} {\tt cascade, checkbutton, command, radiobutton, separator}
+
+\Xi{Menu Indices:} <number>, |'active', 'last', 'none'|, '|@|<y>', '<matchPattern>'
+
+\end{enum}
+
+\subsection*{Menu Widget Commands}
+\begin{enum}{1cm}
+
+\Xi{{\it \$menu}|->|\kwd{activate}(<index>);} 
+Change state of entry at <index> to be sole active entry in menu.
+
+\Xi{{\it \$menu}|->|\kwd{add}(<type> ?, <-option> |=>| <value> ...?);} 
+Add new entry of type <type> to bottom of menu. See below for options.
+
+\Xi{{\it \$menu}|->|\kwd{delete}(<index1> ?, <index2>?);} 
+Delete all entries between <index1> and <index2> inclusive.
+
+\Xi{{\it \$menu}|->|\kwd{entrycget}(<index>, <-option>);} 
+Return current value of <-option> for entry at <index>.
+
+\Xi{{\it \$menu}|->|\kwd{entryconfigure}(<index> ?, <-option> |=>|<value> ...?);} 
+Set option values for entry at <index>.
+
+\Xi{{\it \$menu}|->|\kwd{index}(<index>);} 
+Returns the numerical index corresponding to <index>.
+
+\Xi{{\it \$menu}|->|\kwd{insert}(<index, type> ?, <-option> |=>| <value> ...?);} 
+Same as \kwd{add} but inserts new entry just before entry at <index>.
+
+\Xi{{\it \$menu}|->|\kwd{invoke}(<index>);} 
+Invoke the action of the menu entry at <index>.
+
+\Xi{{\it \$menu}|->|\kwd{post}(<x, y>);} 
+Display menu on screen at  root-window  coordinates  given by <x, y>.
+
+\Xi{{\it \$menu}|->|\kwd{postcascade}(<index>);} 
+Post submenu associated with cascade entry at <index>.
+
+\Xi{{\it \$menu}|->|\kwd{type}(<index>);} 
+Returns type of menu entry at <index>.
+
+\Xi{{\it \$menu}|->|\kwd{unpost};} 
+Unmap window so it is no longer displayed.
+
+\Xi{{\it \$menu}|->|\kwd{ypostion}(<index>);} 
+Returns the y-coordinate within the menu window of the topmost pixel
+in the entry specified by <index>.
+
+\end{enum}
+
+\subsection*{Menu Entry Options}
+
+The following options work for all cascade, checkbutton, command,
+and radiobutton entries unless otherwise specified.
+
+\begin{tabbing}
+|                   |\=|                  |\= \kill
+|-activebackground| \> |-bitmap|          \> |-image| \\
+|-activeforeground| \> |-font|            \> |-state| \\
+|-background|       \> |-foreground|      \> |-underline| \\
+\end{tabbing}
+
+\begin{enum}{1cm}
+
+\Xi{|-accelerator =>| <string>}
+Specifies string to display at right side of menu entry.
+
+\Xi{|-command =>| <callback>}
+Perl command to execute  entry is invoked.
+
+\Xi{|-indicatoron =>| <boolean>}
+Whether indictor for checkbutton or radiobutton entry should be displayed.
+
+\Xi{|-label =>| <string>}
+Textual string to display on left side of menu entry.
+
+\Xi{|-menu =>| <pathName>}
+Pathname to a menu to post when cascade entry is active.
+
+\Xi{|-offvalue =>| <value>}
+Value to store in checkbutton entry's associated variable when deselected.
+
+\Xi{|-onvalue =>| <value>}
+Value to store in checkbutton entry's associated variable when selected.
+
+\Xi{|-selectcolor =>| <color>}
+Color for indicator in checkbutton and radiobutton entries.
+
+\Xi{|-selectimage =>| <image>}
+Image to draw in indicator for checkbutton and radiobutton entries.
+
+\Xi{|-value =>| <value>}
+Value to store in radiobutton entry's associated variable when selected.
+
+\Xi{|-variable =>| <varRef>}
+Name of global variable to set when checkbutton or radiobutton is selected.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% TEXT WIDGET %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Text Widget}
+
+\subsection*{Text Widget Options}
+\begin{tabbing}
+|                    |\=|                    |\= \kill
+|-background|         \> |-highlightthickness| \> |-selectbackground| \\
+|-borderwidth|        \> |-insertbackground|   \> |-selectborderwidth| \\
+|-cursor|	      \> |-insertborderwidth|  \> |-selectforeground| \\
+|-exportselection|    \> |-insertofftime|      \> |-setgrid| \\
+|-font|               \> |-insertontime|       \> |-state| \\
+|-foreground|         \> |-insertwidth|        \> |-takefocus| \\
+|-height|             \> |-padx|               \> |-width| \\         
+|-highlightbackground|\> |-pady|               \> |-xscrollcommand| \\
+|-highlightcolor|     \> |-relief| 	       \> |-yscrollcommand| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{4.7cm}
+
+\Xi{|-spacing1 =>| <size>} Space in screen units above paragraphs.
+
+\Xi{|-spacing2 =>| <size>} Space in screen units between paragraph lines.
+
+\Xi{|-spacing3 =>| <size>} Space in screen units below paragraphs.
+
+\end{enum}
+\begin{enum}{1cm}
+\Xi{|-tabs =>| <tabList>} Set of tab stops as a list of screen
+distances giving their positions. Each stop may be followed
+by one of |left|, |right|, |center|, or |numeric|.
+\end{enum}
+\begin{enum}{5cm}
+
+\Xi{|-wrap =>| |'none'|\||'char'|\||'word'|} How to wrap lines.
+
+\end{enum}
+
+\subsection*{Text Indices}
+
+\begin{enum}{2cm}
+
+\Xi{Syntax:} <base> ?<modifier> ... ?
+
+\Xi{Base:} '<line>.<char>', '|@|<x>,<y>', |'end'|, '<mark>', 
+	   '<tag>.|first'|, '<tag>.|last'|, '<pathName>'
+
+\Xi{Modifier:} '$\pm$ <count> |chars|', '$\pm$ <count> |lines|', |'linestart'|,
+	       |'lineend'|, |'wordstart'|, |'wordend'|
+
+\Xi{Ranges:} Ranges include all characters from the start index upto
+but not including the character at the stop index.
+
+\end{enum}
+ 
+\subsection*{Text Tag Options}
+\begin{tabbing}
+|                    |\=|                    |\= \kill
+|-background|         \> |-justify|         \> |-spacing2| \\
+|-borderwidth|        \> |-relief|          \> |-spacing3| \\
+|-font|               \> |-spacing1|        \> |-wrap| \\
+|-foreground|      
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{4.5cm}
+
+\Xi{|-bgstipple =>| <bitmap>} Stipple pattern for background.
+
+\Xi{|-fgstipple =>| <bitmap>} Stipple pattern for foreground.
+
+\Xi{|-lmargin1 =>| <size>} Left margin of first line of a paragraph.  
+
+\Xi{|-lmargin2 =>| <size>} Left margin of wrapped lines of a paragraph. 
+
+\Xi{|-offset =>| <size>} Offset of baseline from normal baseline. 
+
+\Xi{|-overstrike =>| <boolean>} Whether to overstrike text.
+
+\Xi{|-rmargin =>| <size>} Right margin of all lines. 
+
+\Xi{|-tabs =>| <tabList>} Set of tab stops (see |-tabs| above).
+
+\Xi{|-underline =>| <boolean>} Whether to underline text. 
+
+\end{enum}
+
+\subsection*{Text Embedded Window Options}
+\begin{enum}{1cm}
+
+\Xi{|-align =>| |top|\||center|\||bottom|\||baseline|} 
+Where window is displayed on the line.
+
+\Xi{|-create =>| <script>}
+Script to create and return window pathname if no |-window| option is given.
+
+\Xi{|-padx =>| <width>} 
+Extra space in screen units to leave on the left and right side of window.
+
+\Xi{|-pady =>| <height>} 
+Extra space in screen units to leave on the top and bottom of window.
+
+\Xi{|-stretch =>| <boolean>} 
+Whether window should be stretched vertically to fill line. 
+
+\Xi{|-window =>| <pathName>} 
+Name of window to display
+
+\end{enum}
+
+\subsection*{Text Widget Commands}
+\begin{enum}{1cm}
+
+\Xi{{\it \$text}|->|\kwd{bbox}(<index>);}
+Returns a list (<x, y, width, height>)  giving an <approximate> 
+bounding box of character given by <index>.
+
+\Xi{{\it \$text}|->|\kwd{compare}(<index1, op, index2>);}
+Compares indices <index1> and <index2> according to relational operater <op>.
+
+\Xi{{\it \$text}|->|\kwd{delete}(<index1> ?, <index2>?);}
+Delete range of characters (<index2> defaults to <index1> $+$ {\tt 1 char}).
+
+\Xi{{\it \$text}|->|\kwd{dlineinfo}(<index>);}
+Returns a list (<x, y, width, height, baseline>) describing the screen area 
+taken by display line at <index>.
+
+\Xi{{\it \$text}|->|\kwd{dump}(?<switches>, ? <index1> ?, <index2>?);}
+Returns detailed info on text widget contents in range <index1> to <index2>.
+Switches include |-all|, |-mark|, |-tag|, |-text|, |-window| for specifying
+type of info returned. The switch |-command =>| <callback> exists to invoke
+a procedure on each element type in the range.
+
+\Xi{{\it \$text}|->|\kwd{get}(<index1> ?, <index2>?);}
+Returns string of characters in range (<index2> defaults to <index1> $+$ {\tt 1 char}).
+
+\Xi{{\it \$text}|->|\kwd{index}(<index>);}
+Returns position <index> in <line>.<char> notation.
+
+\Xi{{\it \$text}|->|\kwd{insert}(<index> ?, <string> ?, <tagList>, <string>, <tagList> ...??);}
+Insert <string> into text at <index> applying tags from <tagList>.
+
+\Xi{{\it \$text}|->|\kwd{markGravity}(<markName> |=>| ?|left|\||right|?);}
+Returns (or sets) which adjacent character a mark is attached to.
+
+\Xi{{\it \$text}|->|\kwd{markNames}}
+Returns a list of the names of all marks currently set.
+
+\Xi{{\it \$text}|->|\kwd{markNext \| markPrevious}(<index>);}
+Return name of next/previous mark at or after/before <index>.
+
+\Xi{{\it \$text}|->|\kwd{markSet}(<markName> |=>| <index>);}
+Set mark <markName> to position just before character at <index>.
+
+\Xi{{\it \$text}|->|\kwd{markUnset}(<markName> |=>| ?, <markName> ...?);}
+Remove each mark specified so they are no longer usuable as indices.
+
+\Xi{{\it \$text}|->|\kwd{scan}(<args>);}
+See Widget Scroll Commands above.
+
+\Xi{{\it \$text}|->|\kwd{search}(?<switches>, ? <pattern>, <index> ?, <stopIndex>?);}
+Returns index of first character matching <pattern> in text range
+<index> to <stopIndex>. Switches: {\small {\tt -forwards, -backwards,
+-exact, -regexp, -count} {\it var}, {\tt -nocase}}
+
+\Xi{{\it \$text}|->|\kwd{see}(<index>);}
+Adjust the view in window so character at <index> is completely visible.
+
+\Xi{{\it \$text}|->|\kwd{tagAdd}(<tagName, index1> ?, <index2>?);}
+Apply tag <tagName> to range (<index2> defaults to <index1> $+$ {\tt 1 char}).
+
+\Xi{{\it \$text}|->|\kwd{tagBind}(<tagName> ?, <sequence> ?, <script>??);}
+Arrange for <script> to be run whenever event <sequence> occurs
+for a character with tag <tagName>.
+
+\Xi{{\it \$text}|->|\kwd{tagCget}(<tagName> |=>| <-option>);}
+Return current value of <-option> for tag <tagName>.
+
+\Xi{{\it \$text}|->|\kwd{tagConfigure}(<tagName> ?, <-option> ?, <value> ?, <-option> |=>| <value> ...???);}
+Modifies tag-specific options for the tag <tagName>.
+
+\Xi{{\it \$text}|->|\kwd{tagDelete}(<tagName> ?, <tagName> ...?);}
+Delete all tag information for given tags.
+
+\Xi{{\it \$text}|->|\kwd{tagLower}(<tagName> ?,<belowThis>?);}
+Change priority of tag <tagName> so it is just below tag <belowThis>.
+
+\Xi{{\it \$text}|->|\kwd{tagNames}(?<index>?);}
+Returns a list of the names of all tags associated with character at <index>.
+If <index> is not given, returns list of all tags defined in widget.
+
+\Xi{{\it \$text}|->|\kwd{tagNextrange}(<tagName, index1> ?,<index2>?);}
+Searches character range <index1> to <index2> (default |end|) for the first
+region tagged with <tagName>. Returns character range of region found.
+
+\Xi{{\it \$text}|->|\kwd{tagPrevrange}(<tagName, index1> ?, <index2>?);}
+Like \kwd{tagNextrange} but searchs backwards from <index1> to 
+<index2> (default 1.0).
+
+\Xi{{\it \$text}|->|\kwd{tagRaise}(<tagName> ?, <aboveThis>?);}
+Change priority of tag <tagName> so it is just above tag <aboveThis>.
+
+\Xi{{\it \$text}|->|\kwd{tagRanges}(<tagName>);}
+Returns a list describing all character ranges tagged with <tagName>.
+
+\Xi{{\it \$text}|->|\kwd{tagRemove}(<tagName>, <index1> ?, <index2>?);}
+Remove tag <tagName> for all characters in range <index1> to <index2>.
+
+\Xi{{\it \$text}|->|\kwd{windowCget}(<index>, <-option>);}
+Return current value of <-option> for embedded window at <index>.
+
+\Xi{{\it \$text}|->|\kwd{windowConfigure}(<index> ?, <-option> ?, <value> ?, <-option> |=>| <value> ...???);}
+Modifies embedded window-specific options for the window at <index>.
+
+\Xi{{\it \$text}|->|\kwd{windowCreate}(<index> ?, <-option> |=>| <value> ...?);}
+Create a new embedded window at position <index> with specified options.
+
+\Xi{{\it \$text}|->|\kwd{windowNames};}
+Returns list of names of all windows embedded in widget.
+
+\Xi{{\it \$text}|->|\kwd{xview\|yview}(<args>);}
+See Widget Scroll Commands above.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%% STANDARD WIDGETS %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Other Standard Widgets}
+
+\subsection*{Button}
+\vspace{-4pt}
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-activebackground| \> |-font|               \> |-pady| \\
+|-activeforeground| \> |-foreground|         \> |-relief| \\
+|-anchor|           \> |-height|             \> |-state| \\
+|-background|       \> |-highlightbackground|\> |-takefocus| \\
+|-bitmap|           \> |-highlightcolor|     \> |-text| \\        
+|-borderwidth|      \> |-highlightthickness| \> |-textvariable| \\
+|-command|          \> |-image|              \> |-underline| \\   
+|-cursor|	    \> |-justify|            \> |-width| \\       
+|-disabledforeground| \> |-padx| 	     \> |-wraplength| \\  
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{{\it \$button}|->|\kwd{flash};} 
+Alternate checkbutton between active and normal  colors.
+
+\Xi{{\it \$button}|->|\kwd{invoke};} 
+Toggle the selection state of the checkbutton and invoke the Perl
+command specified with |-command|, if any.
+
+\end{enum}
+
+\subsection*{Checkbutton}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-activebackground| \> |-font|               \> |-pady| \\
+|-activeforeground| \> |-foreground|         \> |-relief| \\
+|-anchor|           \> |-height|             \> |-state| \\
+|-background|       \> |-highlightbackground|\> |-takefocus| \\
+|-bitmap|           \> |-highlightcolor|     \> |-text| \\        
+|-borderwidth|      \> |-highlightthickness| \> |-textvariable| \\
+|-command|          \> |-image|              \> |-underline| \\   
+|-cursor|	    \> |-justify|            \> |-width| \\
+|-disabledforeground| \> |-padx| 	     \> |-wraplength| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-indicatoron =>| <boolean>} Whether  or  not the indicator should be drawn.
+
+\Xi{|-offvalue =>| <value>} Value given to variable specified with |-variable|
+option when the checkbutton is deselected.
+
+\Xi{|-onvalue =>| <value>} Value given to variable specified with |-variable|
+option when the checkbutton is selected.
+
+\Xi{|-selectcolor =>| <color>} Color used to fill in indicator when selected.
+
+\Xi{|-selectimage =>| <image>} Image displayed in indicator when selected.
+
+\Xi{|-variable =>| <varRef>} Variable to associate with checkbutton.
+
+\end{enum}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{{\it \$checkbutton}|->|\kwd{deselect};} Deselect the checkbutton. 
+
+\Xi{{\it \$checkbutton}|->|\kwd{flash};} Alternate checkbutton between 
+active and normal colors.
+
+\Xi{{\it \$checkbutton}|->|\kwd{invoke};} Toggle the selection state 
+of the checkbutton and invoke the Perl command specified with |-command|, if any.
+
+\Xi{{\it \$checkbutton}|->|\kwd{select};} Select the checkbutton.
+
+\Xi{{\it \$checkbutton}|->|\kwd{toggle};} Toggle the selection state 
+of the checkbutton.
+
+\end{enum}
+
+\subsection*{Frame}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth|      \> |-highlightbackground| \> |-relief| \\
+|-cursor|           \> |-highlightcolor|      \> |-takefocus| \\
+|-height|	    \> |-highlightthickness|  \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-background =>| <color>} 
+Same as standard expect it may be the empty string to preserve colormap.
+
+\Xi{|-class =>| <name>} 
+Class name to use in querying the option database and for bindings.
+
+\Xi{|-colormap =>| <colormap>} 
+Colormap to use for the window if different from parent.
+
+\Xi{|-visual =>| <visual>} 
+Visual info to use for the window if different from parent.
+
+\end{enum}
+
+\subsection*{Label}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-anchor|           \> |-height|             \> |-pady| \\
+|-background|       \> |-highlightbackground| \> |-relief| \\       
+|-bitmap|           \> |-highlightcolor|     \> |-takefocus| \\
+|-borderwidth|      \> |-highlightthickness| \> |-text| \\           
+|-cursor|	    \> |-image|              \> |-textvariable| \\   
+|-font|             \> |-justify|            \> |-underline| \\      
+|-foreground|       \> |-padx|               \> |-width| \\          
+		    \>			     \> |-wraplength| \\     
+\end{tabbing}
+
+\subsection*{Menubutton}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                    |\=|                    |\= \kill
+|-activebackground| \> |-foreground|         \> |-relief| \\
+|-activeforeground| \> |-height|             \> |-state| \\
+|-anchor|           \> |-highlightbackground|\> |-takefocus| \\
+|-background|       \> |-highlightcolor|     \> |-text| \\
+|-bitmap|           \> |-highlightthickness| \> |-textvariable| \\
+|-borderwidth|      \> |-image|              \> |-underline| \\
+|-cursor|           \> |-justify|            \> |-width| \\
+|-disabledforeground| \> |-padx| 	     \> |-wraplength| \\
+|-font| 	    \> |-pady| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-indicatoron =>| <boolean>} 
+If true then a small indicator will be displayed on the buttons's
+right side and the default menu bindings will treat this as an option
+menubutton.
+
+\Xi{|-menu =>| <pathName>}
+Pathname of menu widget to post when button is invoked.
+
+\end{enum}
+
+\subsection*{Message}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-anchor|           \> |-highlightbackground| \> |-relief| \\
+|-background|       \> |-highlightcolor|     \> |-takefocus| \\
+|-borderwidth|      \> |-highlightthickness| \> |-text| \\
+|-cursor|	    \> |-justify|            \> |-textvariable| \\
+|-font|             \> |-padx|               \> |-width| \\
+|-foreground|       \> |-pady| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-aspect| <integer>} 
+Ratio of text width to text height times 100 to use to display text.
+
+\end{enum}
+
+\subsection*{Radiobutton}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-activebackground| \> |-font|               \> |-pady| \\
+|-activeforeground| \> |-foreground|         \> |-relief| \\
+|-anchor|           \> |-height|             \> |-state| \\
+|-background|       \> |-highlightbackground| \> |-takefocus| \\    
+|-bitmap|           \> |-highlightcolor|     \> |-text| \\        
+|-borderwidth|      \> |-highlightthickness| \> |-textvariable| \\
+|-command|          \> |-image|              \> |-underline| \\   
+|-cursor|	    \> |-justify| 	     \> |-width| \\       
+|-disabledforeground| \> |-padx| 	     \> |-wraplength| \\  
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-indicatoron =>| <boolean>} Whether  or  not the indicator should be drawn.
+
+\Xi{|-selectcolor =>| <color>} Color used to fill in indicator when selected.
+
+\Xi{|-selectimage =>| <image>} Image displayed in indicator when selected.
+
+\Xi{|-value =>| <value>} Value given to variable specified with |-variable|
+option when the radiobutton is selected.
+
+\Xi{|-variable =>| <varRef>} Variable to associate with radiobutton.
+
+\end{enum}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{{\it \$radiobutton}|->|\kwd{deselect};} Deselect the radiobutton. 
+
+\Xi{{\it \$radiobutton}|->|\kwd{flash};} Alternate radiobutton between 
+active and normal colors.
+
+\Xi{{\it \$radiobutton}|->|\kwd{invoke};} Toggle the selection state 
+of the radiobutton and invoke the Perl command specified with |-command|, if any.
+
+\Xi{{\it \$radiobutton}|->|\kwd{select};} Select the radiobutton.
+
+\end{enum}
+
+\subsection*{Scale}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-activebackground| \> |-highlightbackground| \> |-repeatdelay| \\  
+|-background|       \> |-highlightcolor|     \> |-repeatinterval| \\ 
+|-borderwidth|      \> |-highlightthickness| \> |-state| \\         
+|-cursor|           \> |-orient|             \> |-takefocus| \\   
+|-foreground|       \> |-relief| 	     \> |-troughcolor| \\   
+|-font| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-bigincrement =>| <number>} 
+A real value to use for large increments of the scale.
+
+\Xi{|-command =>| <callback>} 
+Specified a Perl command to invoke when scale's value is changed.
+The scale's value will be appended as an additional argument.
+
+\Xi{|-digits =>| <integer>} 
+An integer specifying how many significant digits should be retained.
+
+\Xi{|-from =>| <number>} 
+A real value corresponding to left or top end of the scale.
+
+\Xi{|-label =>| <string>} 
+A string to display as label for the scale.
+
+\Xi{|-length =>| <size>} 
+Specifies the height (width) for vertical (horizontal) scales.
+
+\Xi{|-resolution =>| <number>} 
+Real value to which scale's value will be rounded to an even multiple of.
+
+\Xi{|-showvalue =>| <boolean>} 
+Whether or not scale's current value should be displayed in side label.
+
+\Xi{|-sliderlength =>| <size>} 
+Size of the  slider, measured along the slider's long dimension.
+
+\Xi{|-sliderrelief =>| <relief>} 
+Specify the relief used to display the slider.
+
+\Xi{|-tickinterval =>| <number >} 
+A real value to specify the spacing between numerical tick marks displayed.
+
+\Xi{|-to =>| <number>} 
+A real value corresponding to  the  right  or bottom end of the scale.
+
+\Xi{|-variable =>| <varRef>} 
+Name of a global variable to link to  the scale.
+
+\Xi{|-width =>| <width>} 
+Narrow dimension of scale (not including border).
+
+\end{enum}
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{{\it \$scale}|->|\kwd{coords}(?<value>?);}
+Returns x and y coordinates of point correspoinding to <value>.
+
+\Xi{{\it \$scale}|->|\kwd{get}(?<x, y>?);}
+If <x, y> is given, returns scale value at that coordiante postion.
+Otherwise, scale's current value is returned.
+
+\Xi{{\it \$scale}|->|\kwd{identify}(<x, y>);}
+Returns string indicating part of scale at postion <x, y>. Maybe one
+of |'slider', 'trough1', 'trough2'| or empty.
+
+\Xi{{\it \$scale}|->|\kwd{set}(<value>);}
+Changes the current value of scale to <value>.
+
+\end{enum}
+
+\subsection*{Scrollbar}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-activebackground| \> |-highlightcolor|     \> |-repeatdelay| \\   
+|-background|       \> |-highlightthickness| \> |-repeatinterval| \\
+|-borderwidth|      \> |-jump| 		     \> |-takefocus| \\
+|-cursor|           \> |-orient|             \> |-troughcolor| \\   
+|-highlightbackground| \> |-relief| \\   
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-activerelief =>| <relief>} 
+Relief to use when displaying the element that is active.
+
+\Xi{|-command =>| <callbackPrefix>} 
+Prefix of a Perl command to invoke to change the view in
+the widget associated with the scrollbar.
+
+\Xi{|-elementborderwidth =>| <width>}
+Width of borders around internal elements (arrows and slider).
+ 
+\Xi{|-width =>| <width>} 
+Narrow dimension of scrollbar (not including border).
+
+\end{enum}
+\begin{enum}{2cm}
+\Xi{Elements:} arrow1, trough1, slider, trough2, arrow2
+\end{enum}
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{{\it \$scrollbar}|->|\kwd{activate}(?<element>?);}
+Display <element> with active attributes.
+
+\Xi{{\it \$scrollbar}|->|\kwd{delta}(<deltaX, deltaY>);}
+Returns fractional position change for slider movement of <deltaX deltaY>.
+
+\Xi{{\it \$scrollbar}|->|\kwd{fraction}(<x, y>);}
+Returns a real number between 0 and 1 indicating where the point given
+by pixel coords <x y> lies in the trough area of the scrollbar.
+
+\Xi{{\it \$scrollbar}|->|\kwd{get};}
+Returns current scrollbar settings as the list \{<first> <last>\}.
+
+\Xi{{\it \$scrollbar}|->|\kwd{identify}(<x, y>);}
+Returns name of element under pixel coords <x y>.
+
+\Xi{{\it \$scrollbar}|->|\kwd{set}(<first, last>);}
+Describes current view of associated widget where <first> and <last> are the
+percentage distance from widget's beginning of the start and end of
+the view.
+
+\end{enum}
+
+\subsection*{Toplevel}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth| \> |-highlightbackground|     \> |-relief| \\   
+|-cursor|      \> |-highlightcolor|          \> |-takefocus| \\
+|-height|      \> |-highlightthickness|      \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-background =>| <color>} 
+Same as standard but my be empty to preserve colormap space.
+
+\Xi{|-class =>| <string>} 
+Class name for the window to be used by option database.
+
+\Xi{|-colormap =>| <colormap>} 
+Color map to use for window. May be the word |new|, pathname of
+other toplevel, or empty for the default colormap of screen.
+
+\Xi{|-screen =>| <screen>}
+Screen on which to place the window.
+ 
+\Xi{|-visual =>| <visual>} 
+Specifies visual to use for window.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% Special Perl/Tk Widgets %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Perl/Tk Widgets}
+
+Here are Tix and user contributed widgets particular to Perl/Tk.
+
+\subsection*{Adjuster}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth|      \> |-highlightbackground| \> |-relief| \\
+|-cursor|           \> |-highlightcolor|      \> |-takefocus| \\
+|-height|	    \> |-highlightthickness|  \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$widget}|->|\kwd{packAdjust}(?packOptions?);}
+If \$widget is packed with -side |=>| left or -side |=>| right then width is adjusted.
+If packed -side |=>| top or -side |=>| bottom then height is adjusted. 
+
+\end{enum}
+
+\subsection*{Ballon}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth| \> |-highlightbackground|     \> |-relief| \\   
+|-cursor|      \> |-highlightcolor|          \> |-takefocus| \\
+|-height|      \> |-highlightthickness|      \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-initwait =>| <delay>}
+Milliseconds to wait without activity before popping up a help balloon
+(default 350 milliseconds). This applies only to the popped up
+balloon; the status bar message is shown instantly. 
+
+\Xi{|-state =>| |balloon|\||status|\||both|\||none|}
+Indicates that the help balloon, status bar help, both or none, respectively,
+ should be activated when the mouse pauses over the client widget. 
+
+\Xi{|-statusbar =>| \$widget}
+Specifies the widget used to display the status message. This widget should accept the
+|-text| option and is typically a Label. 
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$balloon}|->|\kwd{attach}(<-options>);}
+Attaches the widget indicated by widget to the help system.
+
+\Xi{\quad |-statusmsg =>| <statusMessage>}
+The message shown on the status bar when the mouse passes over this client. If not specified
+but <-msg> is specified then the message displayed on the status bar is the same as the argument for <-msg>. 
+
+\Xi{\quad |-balloonmsg =>| <balloonMessage>}
+The message displayed in the balloon when the mouse pauses over the client. As with <-statusmsg>
+if this is not specified, then it takes its value from the <-msg> specification. If neither
+<-balloonmsg> nor <-msg> are specified, then an empty balloon will be popped up.
+
+\Xi{\quad |-msg =>| <defaultMessage>}
+The catch-all for <-statusmsg> and <-balloonmsg>. This is a convenient way of specifying
+the same message to be displayed in both the balloon and the status bar for the client. 
+
+\Xi{{\it \$balloon}|->|\kwd{detach}(\$widget);}
+Detaches the specified widget widget from the help system. 
+
+\end{enum}
+
+\subsection*{BrowseEntry}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth|      \> |-highlightbackground| \> |-relief| \\
+|-cursor|           \> |-highlightcolor|      \> |-takefocus| \\
+|-height|	    \> |-highlightthickness|  \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-listwidth =>| <width>}
+Specifies the character width of the popup listbox. 
+
+\Xi{|-variable =>| <varRef>}
+Where entered value is stored. 
+
+\Xi{|-browsecmd =>| <callback>}
+Specifies a function to call when a selection is made.
+It is passed the widget and the text of the entry
+selected. This function is called after <varRef> has been
+assigned the value.
+
+\Xi{|-listcmd =>| <callback>}
+Specifies the function to call when the button next to the entry is pressed to popup the
+choices in the listbox. This is called before popping up the listbox, so it can be used to
+populate the entries in the listbox. 
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$browse}|->|\kwd{insert}(<index>, <string>);}
+Inserts the text of string at the specified index. This string then becomes available as one of the choices. 
+
+\Xi{{\it \$browse}|->|\kwd{delete}(<index1>, <index2>);}
+Deletes items from <index1> to <index2>. 
+
+\end{enum}
+
+\subsection*{ColorEditor}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth| \> |-highlightbackground|     \> |-relief| \\   
+|-cursor|      \> |-highlightcolor|          \> |-takefocus| \\
+|-height|      \> |-highlightthickness|      \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-title =>| <string>}
+Toplevel title, default = ' '.
+
+\Xi{|-cursor=>| <cursor>}
+A valid Tk cursor specification (default is <top\_left\_arrow>).  This cursor is used over all ColorEditor
+hot spots.
+
+\Xi{|-command =>| <callback>}
+Optional replacement for \kwd{set\_colors} color configurator.
+
+\Xi{|-widgets =>| [<widgetList>]}
+A reference to a list of widgets for the color configurator to color.
+
+\Xi{|-display\_status =>| <boolean>}
+True to display the ColorEditor status window when applying colors.
+
+\Xi{|-add\_menu\_item =>| <itemString>}
+'SEP' (a separator), or a color attribute menu item.
+
+\Xi{|-delete\_menu\_item =>| <itemString>}
+'SEP', a color attribute menu item, or color attribute menu ordinal.
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$cedit}|->|\kwd{Show};}
+Map the Coloreditor toplevel window.
+
+\Xi{{\it \$cedit}|->|\kwd{delete\_widgets}([<widgetList>]);}
+A reference to a list of widgets to remove from ColorEditor's consideration.
+
+\end{enum}
+
+\subsection*{Dialog}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth| \> |-highlightbackground|     \> |-relief| \\   
+|-cursor|      \> |-highlightcolor|          \> |-takefocus| \\
+|-height|      \> |-highlightthickness|      \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-title =>| <string>} Title to display in the dialog's decorative frame.
+
+\Xi{|-text =>| <string>} Message to display in the dialog widget.
+
+\Xi{|-bitmap =>| <bitmap>} Bitmap to display in the dialog.
+
+\Xi{|-default\_button =>| <string>} Text label of the button that is to display the
+default ring.
+
+\Xi{|-buttons =>| [<@button\_labels>]} A reference to a list of button label strings.
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$dialog}|->|\kwd{Show}(?-global?);} Show dialog and return the
+selection as a string.  The grab is local unless <-global> is specified.
+
+\end{enum}
+
+\subsection*{FileSelect}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth| \> |-highlightbackground|     \> |-relief| \\   
+|-cursor|      \> |-highlightcolor|          \> |-takefocus| \\
+|-height|      \> |-highlightthickness|      \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-width =>| <width>}
+Width of file  and directory list boxes.
+
+\Xi{|-height =>| <height>}
+Height of file  and directory list boxes.
+
+\Xi{|-directory =>| <pathName>}
+Starting directory path name.
+
+\Xi{|-filelabel =>| <string>}
+Label for file entry widget.
+
+\Xi{|-filelistlabel =>| <string>}
+Label for file listbox widget.
+
+\Xi{|-filter =>| <string>}
+Limit search to the wildcard <string>.
+
+\Xi{|-dirlabel =>| <string>}
+Label for directory entry widget.
+
+\Xi{|-dirlistlabel =>| <string>}
+Label for directory listbox widget.
+
+\Xi{|-accept =>| <callback>}
+Override FileSelect Accept subroutine with your own.
+
+\Xi{|-create =>| <boolean>}
+True if it's okay to create directories.
+
+\Xi{|-verify =>| [-verifyOptions]}
+A list of Perl file test operators and/or <callbacks> to your own verify
+subroutine.  The subroutine is implicitly called with a directory path
+name and a file (or directory) name, and possibly optional arguments.
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$fsel}|->|\kwd{Show};}
+Map the FileSelect toplevel window; return selection or undef.
+
+\end{enum}
+
+\subsection*{HList}
+\begin{tabbing}
+|                    |\=|                    |\= \kill                    
+|-background|        \> |-height|             \> |-selectborderwidth| \\
+|-borderwidth|       \> |-highlightbackground| \> |-selectforeground| \\
+|-cursor|	     \> |-highlightcolor|     \> |-setGrid| \\         
+|-exportselection|   \> |-highlightthickness| \> |-takefocus| \\
+|-font|              \> |-relief|             \> |-width| \\           
+|-foreground|        \> |-selectbackground|   \> |-xscrollcommand| \\  
+\> \> |-yscrollcommand| \\  
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-browsecmd =>| <callback>}
+Specifies the callback invoked when the user browses through the entries in the HList widget. 
+
+\Xi{|-columns =>| <integer>}
+Specifies the number of columns in this HList widget.
+
+\Xi{|-command =>| <callback>}
+Specifies the callback invoked when the user selects a list entry.
+
+\Xi{|-drawBranch =>| <boolean>}
+Ture if a branch line should be drawn to connect list entries to their parents. 
+
+\Xi{|-header =>| <boolean>}
+Specifies whether headers should be displayed (see the \kwd{header} method below). 
+
+\Xi{|-height =>| <integer>}
+Specifies the desired height for the window in number of characters. 
+
+\Xi{|-indent =>| |pixels\|textchars|}
+Specifies the amount of horizontal indentation between a list entry and its children.
+
+\Xi{|-indicator =>| <boolean>}
+Specifies whether the indicators should be displayed. See the \kwd{indicator} methods below. 
+
+\Xi{|-indicatorCmd =>| <callback>}
+Specifies the callback executed when the user manipulates the indicator of an HList entry.
+The default callback is invoked with one implicit argument, the <entryPath> of the entry whose indicator has been triggered.
+
+\Xi{|-itemType =>| |imagetext\|text\|window|}
+Specifies the default type of display item.
+
+\Xi{|-selectBackground =>| <color>}
+Specifies the background color for the selected list entries. 
+
+\Xi{|-selectBorderWidth =>| <width>}
+Specifies the width of the 3-D border to draw around selected items.
+
+\Xi{|-selectForeground =>| <color>}
+Specifies the foreground color for the selected list entries. 
+
+\Xi{|-selectMode =>| |single browse multiple extended|}
+Specifies one of several styles for manipulating the selection.
+
+\Xi{|-sizeCmd =>| <callback>}
+Specifies the callback executed whenever the HList widget changes size.
+
+\Xi{|-separator =>| <string>}
+Specifies the character to used as the separator character when intepreting the path-names of list entries.
+By default the character "." is used. 
+
+\Xi{|-width =>| <width>}
+Specifies the desired width for the window in characters. 
+
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$hlist}|->|\kwd{add}(<entryPath> ?, <-option> |=>| <value>?);}
+Creates a new list entry with the pathname <entryPath>.
+
+\Xi{\quad |-at =>| <index>}
+Insert the new list at the position given by position <index>.
+
+\Xi{\quad |-after =>| <index>}
+Insert the new list entry after the entry identified by <index>.
+
+\Xi{\quad |-before =>| <index>}
+Insert the new list entry before the entry identified by <index>.
+
+\Xi{\quad |-data =>| <string>}
+Specifies a string to associate with this list entry.
+
+\Xi{\quad |-itemtype =>| |imagetext\|text\|window|}
+Specifies the default type of display item.
+
+\Xi{\quad |-state =>| |normal\|disabled|}
+Specifies whether this entry can be selected or invoked by the user.
+
+\Xi{{\it \$hlist}|->|\kwd{addchild}(<parent> ?, <-option> |=>| <value>?);}
+Adds a new child entry to the children list of the list entry <parentPath> and returns the
+new <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{anchorSet}(<entryPath>);}
+Sets the anchor to the list entry identified by <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{anchorClear};}
+Removes the anchor, if any.
+
+\Xi{{\it \$hlist}|->|\kwd{cget}(<-option>);}
+Returns the current value of <-option>.
+
+\Xi{{\it \$hlist}|->|\kwd{ColumnWidth}(col ?, -char? ?, width?);}
+Querys or sets the width of the column <col>.
+
+\Xi{{\it \$hlist}|->|\kwd{ColumnWidth}(col |=> ''|);}
+An empty string indicates that the width of the column should be just wide enough to display the widest element in this column.
+
+\Xi{{\it \$hlist}|->|\kwd{columnWidth}(<col>, <width>);}
+Set column <col> to pixel width <width>.
+
+\Xi{{\it \$hlist}|->|\kwd{columnWidth}(<col>, -char |=>| <nchars>);}
+The width is set to be the average width occupied by <nchars> number of characters of the font specified by the -font option.
+
+\Xi{{\it \$hlist}|->|\kwd{configure}(?<-option> |=>| <value>?);}
+Query or modify the configuration options of the widget.
+
+\Xi{{\it \$hlist}|->|\kwd{deleteAll};}
+Delete all list entries.
+
+\Xi{{\it \$hlist}|->|\kwd{deleteEntry}(<entryPath>);}
+Delete list entry <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{deleteOffsprings}(<entryPath>);}
+Delete all offsprings of <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{deleteSiblings}(<entryPath>);}
+Delete all the list entries that share the parent <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{dragsiteSet}(<entryPath>);}
+Sets the dragsite to the list entry identified by <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{dragsiteClear};}
+Remove the dragsite, if any.
+
+\Xi{{\it \$hlist}|->|\kwd{dropsiteSet}(<entryPath>);}
+Sets the dropsite to the list entry identified by <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{dropsiteClear};}
+Remove the dropsite, if any.
+
+\Xi{{\it \$hlist}|->|\kwd{entrycget}(<entryPath>, <-option>);}
+Returns the current value of the configuration option <-option> for <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{entryconfigure}(<entryPath> ?, <-option> |=>| <value>?);}
+Query or modify the configuration options of the list entry <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{headerCget}(<col>, <option >);}
+If column <col> has a header display item, returns the value of the specified option of the header item. 
+
+\Xi{{\it \$hlist}|->|\kwd{headerConfigure}(<col> ?, option? ?|=>| <value>?);}
+Query or modify the configuration options of the header display item of column <col>.
+
+\Xi{{\it \$hlist}|->|\kwd{headerCreate}(<col> ?, -itemtype |=>| <type>? ?, <-option> |=>| value ...?);}
+Creates a new display item as the header for column <col>.
+
+\Xi{\quad |-borderwidth =>| <width>}
+Specifies the border width of this header item. 
+
+\Xi{\quad |-headerbackground =>| <color>}
+Specifies the background color of this header item. 
+
+\Xi{\quad |-relief =>| <relief>}
+Specifies the relief type of the border of this header item. 
+
+\Xi{{\it \$hlist}|->|\kwd{headerDelete}(<col>);}
+Deletes the header display item for column <col>. 
+
+\Xi{{\it \$hlist}|->|\kwd{headerExists}(<col>);}
+Returns true if a header display item exists for column <col>.
+
+\Xi{{\it \$hlist}|->|\kwd{headerSize}(<col>);}
+Returns a two element list of the form [<width>, <height>] of the header display item for column <col>;
+
+\Xi{{\it \$hlist}|->|\kwd{hideEntry}(<entryPath>);}
+Hides the list entry identified by <entryPath>. 
+
+\Xi{{\it \$hlist}|->|\kwd{indicatorCget}(<entryPath>, <option>);}
+Returns the value of the specified option of the indicator for <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{indicatorConfigure}(<entryPath> ?, <option>? ?|=>| <value>?);}
+Query or modify the configuration options of the indicator display item of <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{indicatorCreate}(<entryPath> ?,-itemtype |=>| <type>? ?, <option> |=>| <value>);}
+Creates a new display item as the indicator for <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{indicatorDelete}(<entryPath>);}
+Deletes the indicator display item for <entryPath>. 
+
+\Xi{{\it \$hlist}|->|\kwd{indicatorExists}(<entryPath>);}
+Return true if an indicator display item exists for <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{indicatorSize}(<entryPath>);}
+Returns a two element list of the form [<width>, <height>] of the indicator display item for <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{infoAnchor};}
+Returns the <entryPath> of the current anchor.
+
+\Xi{{\it \$hlist}|->|\kwd{infoBbox}(<entryPath>);}
+Returns a list of four numbers describing the visible bounding box of <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{infoChildren}(?<entryPath>?);}
+If <entrpyPath> is given, returns a list of its children entries,  otherwise returns a list of the toplevel. 
+
+\Xi{{\it \$hlist}|->|\kwd{infoData}(?<entryPath>?);}
+Returns the data associated with <entryPath>. 
+
+\Xi{{\it \$hlist}|->|\kwd{infoDragsite};}
+Returns the <entryPath> of the current dragsite.
+
+\Xi{{\it \$hlist}|->|\kwd{infoDropsite};}
+Returns the <entryPath> of the current dropsite.
+
+\Xi{{\it \$hlist}|->|\kwd{infoExists}(<entryPath>);}
+Returns a boolean value indicating whether <entrpyPath> exists. 
+
+\Xi{{\it \$hlist}|->|\kwd{infoHidden}(<entryPath>);}
+Returns a boolean value indicating whether <entrpyPath> is hidden. 
+
+\Xi{{\it \$hlist}|->|\kwd{infoNext}(<entryPath>);}
+Returns the <entryPath> of the list entry immediately below this list entry.
+
+\Xi{{\it \$hlist}|->|\kwd{infoParent}(<entryPath>);}
+Returns the name of the parent of <entrpyPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{infoPrev}(<entryPath>);}
+Returns the <entryPath> of the list entry immediately above this list entry.
+
+\Xi{{\it \$hlist}|->|\kwd{infoSelection};}
+Returns a list of selected entries.
+
+\Xi{{\it \$hlist}|->|\kwd{itemCget}(<entryPath>, <col>, <option>);}
+Returns the current value of <option> for <entryPath> at column <col>.
+
+\Xi{{\it \$hlist}|->|\kwd{itemConfigure}(<entryPath>, <col>, ?, <option>?, |=>| ?<value>);}
+Query or modify the configuration options of <entryPath> at column <col>.
+
+\Xi{{\it \$hlist}|->|\kwd{itemCreate}(<entryPath>, <col>, ?, <-itemtype> |=>| <type>? ?, <option> |=>| <value>);}
+Creates a new display item at column <col> of <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{itemDelete}(<entryPath>, <col>);}
+Deletes the display item at column <col> of <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{itemExists}(<entryPath>, <col>);}
+Returns true if there is a display item at column <col> of <entryPath>.
+
+\Xi{{\it \$hlist}|->|\kwd{nearest}(<y>);}
+Returns the <entryPath> of the visible element nearest to Y-coordinate <y>.
+
+\Xi{{\it \$hlist}|->|\kwd{see}(<entryPath>);}
+Adjust the view so that <entryPath> is visible.
+
+\Xi{{\it \$hlist}|->|\kwd{selectionClear}(?<from>? ?, <to>?);}
+Deselect the list entries <from> through <to>, inclusive.
+
+\Xi{{\it \$hlist}|->|\kwd{selectionGet};}
+This is an alias for the \kwd{infoSelection} widget command.
+
+\Xi{{\it \$hlist}|->|\kwd{selectionIncludes}(<entryPath>);}
+Returns true if <entryPath> is currently selected.
+
+\Xi{{\it \$hlist}|->|\kwd{selectionSet}(<from> ?, <to>);}
+Selects all of the list entrie(s) between between <from> and <to>, inclusive.
+
+\Xi{{\it \$hlist}|->|\kwd{showEntry}(?<entryPath>?);}
+Shows the list entry <entryPath>. 
+
+\Xi{{\it \$hlist}|->|\kwd{xview};}
+Returns a list of two real fractions between 0 and 1 describing the horizontal span that is visible in the window.
+
+\Xi{{\it \$hlist}|->|\kwd{xview}(<entryPath>);}
+Adjusts the view in the window so that the list entry identified by <entryPath> is aligned to the left edge of the window. 
+
+\Xi{{\it \$hlist}|->|\kwd{xviewMoveto}(<fraction>);}
+Adjusts the view in the window so that <fraction> of the total width of the HList is off-screen to the left.
+
+\Xi{{\it \$hlist}|->|\kwd{xviewScroll}(<int>, |units\|pages|);}
+Shifts the view in the window left or right according to <int> and <what>.
+
+\Xi{{\it \$hlist}|->|\kwd{yview};}
+Returns a list of real fractions between 0 and 1 describing the vertical span that is visible in the window.
+
+\Xi{{\it \$hlist}|->|\kwd{yview}(<entryPath>);}
+Adjusts the view in the window so that <entryPath> is displayed at the top of the window. 
+
+\Xi{{\it \$hlist}|->|\kwd{yviewMoveto}(<fraction>);}
+Adjusts the view in the window so that <fraction> of the total height of the HList is off-screen to the top.
+
+\Xi{{\it \$hlist}|->|\kwd{yviewScroll}(<int>, |'units'\|'pages'|);}
+Shifts the view in the window up or down according to <int> and <what>.
+
+\end{enum}
+
+\subsection*{NoteBook}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth|      \> |-highlightbackground| \> |-relief| \\
+|-cursor|           \> |-highlightcolor|      \> |-takefocus| \\
+|-height|	    \> |-highlightthickness|  \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-dynamicgeometry =>| <boolean>}
+False ensures all noteboook pages are the same size.  True resizes the notebook 
+as different pages are selected.
+
+\Xi{|-ipadx =>| <pixels>}
+The amount of internal horizontal padding around the pages. 
+
+\Xi{|-ipady =>| <pixels>}
+The amount of internal vertical padding around the pages. 
+
+\end{enum}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$note}|->|\kwd{add}(<page>, <-option> |=>| <value>);}
+Adds a page with name <page> to the notebook.
+
+\Xi{\quad |-anchor =>| |n\|ne\|e\|se\|s\|sw\|w\|nw\|center|}
+Specifies how the information in a tab is to be displayed.
+
+\Xi{\quad |-bitmap =>| <bitmap>}
+Specifies a bitmap to display on the tab of this page. The bitmap is displayed only if none of the |-label| or
+|-image| options are specified. 
+
+\Xi{\quad |-image =>| <image>}
+Specifies an image to display on the tab of this page. The image is displayed only if the |-label| option is not
+specified. 
+
+\Xi{\quad |-label =>| <string>}
+Specifies the text string to display on the tab of this page. 
+
+\Xi{\quad |-justify =>| |let\|right\|center|}
+When there are multiple lines of text displayed in a tab, this option determines the justification of the lines.
+
+\Xi{\quad |-createcmd =>| <callback>}
+The <callback> invoked the first time the page is shown on the screen.
+
+\Xi{\quad |-raisecmd =>| <callback>}
+The <callback> invoked whenever this page is raised by the user. 
+
+\Xi{\quad |-state =>| |normal\|disabled|}
+Specifies whether this page can be raised by the user.
+
+\Xi{\quad |-underline =>| <integer>}
+Specifies the integer index of a character to underline in the tab.
+
+\Xi{\quad |-wraplength =>| <integer>}
+This option specifies the maximum line length of the label string on this tab.
+
+\Xi{{\it \$note}|->|\kwd{delete}(<page>);}
+Deletes the page identified by <page>. 
+
+\Xi{{\it \$note}|->|\kwd{pagecget}(<page>, <-option>);}
+Returns the current value of the configuration option given by <-option> in the page given by <page>. Options may
+have any of the values accepted in the \kwd{add} method. 
+
+\Xi{{\it \$note}|->|\kwd{pageconfigure}(<page>, <-option> |=>| <value>);}
+Like configure for the page indicated by <page>. Options may be any of the options accepted by the
+\kwd{add}  method. 
+
+\Xi{{\it \$note}|->|\kwd{raise}(<page>);}
+Raise the page identified by <page>. 
+
+\Xi{{\it \$note}|->|\kwd{raised};}
+Returns the name of the currently raised page. 
+
+\end{enum}
+
+\subsection*{Optionmenu}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                    |\=|                    |\= \kill
+|-activebackground| \> |-foreground|         \> |-relief| \\
+|-activeforeground| \> |-height|             \> |-state| \\
+|-anchor|           \> |-highlightbackground|\> |-takefocus| \\
+|-background|       \> |-highlightcolor|     \> |-text| \\
+|-bitmap|           \> |-highlightthickness| \> |-textvariable| \\
+|-borderwidth|      \> |-image|              \> |-underline| \\
+|-cursor|           \> |-justify|            \> |-width| \\
+|-disabledforeground| \> |-padx| 	     \> |-wraplength| \\
+|-font| 	    \> |-pady| \\
+\end{tabbing}
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-options => |[<optionList>]} The menuitems, specified as a
+reference to a list of strings.
+
+\Xi{|-command => |<callback>} The callback to invoke after <varRef> is set.
+ 
+\end{enum}
+
+\subsection*{Pod}
+\vspace{-4pt}
+
+\begin{tabbing}
+|                   |\=|                     |\= \kill
+|-borderwidth| \> |-highlightbackground|     \> |-relief| \\   
+|-cursor|      \> |-highlightcolor|          \> |-takefocus| \\
+|-height|      \> |-highlightthickness|      \> |-width| \\
+\end{tabbing}
+
+\vskip5pt
+
+\begin{enum}{1cm}
+
+\Xi{|-file =>| <pathName>}
+Path name of file with embedded POD directives.
+
+\Xi{|-scrollbars =>| <scrollSpec>}
+Scrollbar specifications.
+
+\end{enum}
+
+\subsection*{Scrolled}
+
+Perl/Tk includes the special constructor \kwd{Scrolled} which
+creates a widget with attached scrollbars, as long as the widget class
+supports the x/y scrollcommand(s), as \kwd{Canvas},
+\kwd{Entry}, \kwd{Listbox} and \kwd{Text} do.  Scrollbars can be required, or might
+spring into existance only when needed.
+
+\quad \quad <\$scrolled> |=| <\$parent>|->|\kwd{Scrolled}(<widgetClass> ...);
+
+You may specifiy option/value pairs which are passed to the <widgetClass>
+constructor.
+
+\vskip5pt
+\begin{enum}{1cm}
+
+\Xi{|-scrollbars =>| <scrollbarSpecs>}
+The strings <n s e w> specifiy top, botton, left or right scrollbars,
+repsectively.  The string <sw> creates two scrollbars, on the left and bottom of
+the widget.  The string <o> means optional and <r> required, so
+'rwos' means required on 'west' (vertical), optional on 'south' (horizontal).
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% IMAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Images}
+
+Images are created using the |DefineBitmap|, |Bitmap| and |Photo| methods, described below.
+Bitmaps have a pixel depth of 2 bits, whereas Photos can be full color 24 bit
+GIF89, XPM, XBM or BMP objects.
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$widget}|->|\kwd{DefineBitmap}(<bitmapName, bitColumns, bitRows, bitVector>);}
+Define a bitmap named <bitmapName> directly in Perl code.  The first <bitColumns> bits
+packed in <bitVector> are row one.
+
+\end{enum}
+
+Here are image manipulation methods common to the remaining two image types:
+
+\begin{enum}{1cm}
+
+\Xi{\$image|->|\kwd{delete};}
+Deletes the image.
+
+\Xi{\$image|->|\kwd{height};}
+Returns pixel height of image.
+
+\Xi{\$image|->|\kwd{imageNames};}
+Returns a list of the names of all existing images.
+
+\Xi{\$image|->|\kwd{type};}
+Returns the type of image.
+
+\Xi{\$image|->|\kwd{imageTypes};}
+Returns a list of valid image types.
+
+\Xi{\$image|->|\kwd{width};}
+Returns pixel width of image.
+
+\end{enum}
+
+When an image is created via the |DefineBitmap|, |Bitmap| or |Photo| method, Tk
+creates an image object reference to the the image. For all image
+types, this object supports the \kwd{cget} and \kwd{configure}
+methods in the same manner as widgets for changing and querying
+configuration options.  Of course, image configuration commands can still
+be passed to the creation method:
+
+|$image = $mw->Photo(-file => '/home/bug/photo.gif');|
+
+\subsection*{The Bitmap image method}
+\vspace{-4pt}
+
+\begin{enum}{1cm}
+
+\Xi{|-background =>| <color>} 
+Set background color for bitmap.
+
+\Xi{|-data =>| <string>} 
+Specify contents of bitmap in X11 bitmap format.
+
+\Xi{|-file =>| <pathName>} 
+Gives name of file whose contents define the bitmap in X11 bitmap format.
+
+\Xi{|-foreground =>| <color>} 
+Set foreground color for bitmap.
+
+\Xi{|-maskdata =>| <string>} 
+Specify contents of mask in X11 bitmap format.
+
+\Xi{|-maskfile =>| <pathName>} 
+Gives name of file whose contents define the mask in X11 bitmap format.
+
+\end{enum}
+
+\subsection*{The Photo image method}
+\vspace{-4pt}
+
+\begin{enum}{1cm}
+
+\Xi{|-data =>| <string>} 
+Specify contents of image in a supported format.
+
+\Xi{|-format =>| <formatName>} 
+Specify format for data specified with the |-data| or |-file| options.
+
+\Xi{|-file =>| <pathName>} 
+Gives name of file whose contents define the image in supported format.
+
+\Xi{|-height =>| <number>} 
+Specifies pixel height of the image.
+
+\Xi{|-palette =>| <paletteSpec>} 
+Set the resolution of the color cube to be allocated for image.
+
+\Xi{|-width =>| <number>} 
+Specifies pixel width of the image.
+
+\end{enum}
+
+\begin{enum}{1cm}
+
+\Xi{{\it \$image}|->|\kwd{blank};}
+Blanks the image so it has no data and is completely transparent.
+
+\Xi{{\it \$image}|->|\kwd{copy}(<sourceImage> ?, <-option> |=>| <value ...>?);}
+Copy a region from <sourceImage> to <\$image> using given options.
+
+\Xi{\quad |-from =>| <x1, y1, x2, y2>}
+Specifies rectangular region of source image to be copied.
+
+\Xi{\quad |-to =>| <x1, y1, x2, y2>}
+Specifies rectangular region of target image to be affected.
+
+\Xi{\quad |-shrink|}
+Will clip target image so copied region is in bottom-right corner.
+
+\Xi{\quad |-zoom =>| <x, y>}
+Magnifies source region by <x y> in respective direction.
+
+\Xi{\quad |-subsample =>| <x, y>}
+Reduces source image by using only every <x y>th pixel.
+
+\Xi{{\it \$image}|->|\kwd{get}(<x, y>);}
+Returns RGB value of pixel at coords <x y> as list of three integers.
+
+\Xi{{\it \$image}|->|\kwd{put}(<data> ?|-to =>| <x1, y1, x2, y2>?);}
+Sets pixels values for the region <x1 y1 x2 y2> for 2-D array <data>.
+
+\Xi{{\it \$image}|->|\kwd{read}(<pathName> ?,<-option => value ...>?);}
+Reads image data from file <pathName> into \$image using given options.
+
+\Xi{\quad |-format =>| <format-name>}
+Specifies image format of file.
+
+\Xi{\quad |-from =>| <x,1 y1, x2, y2>}
+Specifies a rectangular region of the image file to copy from.
+
+\Xi{\quad |-shrink|}
+Will clip image so copied region is in bottom-right corner.
+
+\Xi{\quad |-to =>| <x, y>}
+Specifies coords of the top-left corner in image to copy into.
+
+\Xi{{\it \$image}|->|\kwd{redither};}
+Redither the image.
+
+\Xi{{\it \$image}|->|\kwd{write}(<pathName> ?, <-option> |=>| <value ...>?);}
+Writes image data from image into file <pathName>.
+
+\Xi{\quad |-format =>| <format-name>}
+Specifies image format for the file.
+
+\Xi{\quad |-from =>| <x1, y1, x2, y2>}
+Specifies a rectangular region of the image to copy from.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% THE winfo COMMAND %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Window Information}
+
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{allmapped};}
+Returns 1 if <\$widget> and all its ancestors are mapped, 0 otherwise.
+
+\Xi{\$widget|->|\kwd{atom}(<name>);}
+Returns integer identifier for atom given by <name> on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{atomname}(<id>);}
+Returns textual name of atom given by integer <id> on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{cells};}
+Returns number of cells in the colormap for <\$widget>.
+
+\Xi{\$widget|->|\kwd{children};}
+Returns list containing path names of all the children of <\$widget>.
+
+\Xi{\$widget|->|\kwd{class};}
+Returns the class name of <\$widget>.
+
+\Xi{\$widget|->|\kwd{colormapfull};}
+Return 1 if the colormap for <\$widget> is full, 0 otherwise.
+
+\Xi{\$widget|->|\kwd{containing}(<rootX, rootY>);}
+Returns path name of window containing the point <rootX rootY>
+on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{depth};}
+Returns the depth (bits per pixel) of <\$widget>.
+
+\Xi{\$widget|->|\kwd{fpixels}(<number>);}
+Returns floating-point value giving the number of pixesl in <\$widget>
+corresponding to the distance given by <number>.
+
+\Xi{\$widget|->|\kwd{geometry};}
+Returns the pixel geometry for <\$widget>, in the form <width>x<height>+<x>+<y>.
+
+\Xi{\$widget|->|\kwd{height};}
+Returns height of <\$widget> in pixels.
+
+\Xi{\$widget|->|\kwd{id};}
+Returns  a hexadecimal string indicating the X  identifier for <\$widget>.
+
+\Xi{\$widget|->|\kwd{interps};}
+Returns a list of all Perl interpreters registered on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{ismapped};}
+Returns 1 if <\$widget> is currently mapped, 0 otherwise.
+
+\Xi{\$widget|->|\kwd{MainWindow};}
+Returns a reference to the display's \kwd{MainWindow}.
+
+\Xi{\$widget|->|\kwd{manager};}
+Returns the name of the geometry manager currently responsible for
+<\$widget>.
+
+\Xi{\$widget|->|\kwd{name};}
+Returns <\$widget>'s name within its parent, as opposed to its full path
+name.
+
+\Xi{\$widget|->|\kwd{parent};}
+Returns the path name of <\$widget>'s parent.
+
+\Xi{\$widget|->|\kwd{pathname}(<id>);}
+Returns the path name of the window whose X identifier is <id> on
+<\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{pixels}(<number>);}
+Returns the number of pixels in <\$widget> corresponding to the distance
+given by <number>, rounded to the nearest integer.
+
+\Xi{\$widget|->|\kwd{pointerx};}
+Returns mouse pointer's x coordinate on <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{pointerxy};}
+Returns mouse pointer's x and y coordinates on <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{pointery};}
+Returns mouse pointer's y coordinate on <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{reqheight};}
+Returns a decimal string giving <\$widget>'s requested height, in pixels.
+
+\Xi{\$widget|->|\kwd{reqwidth};}
+Returns a decimal string giving <\$widget>'s requested width, in pixels.
+
+\Xi{\$widget|->|\kwd{rgb}(<color>);}
+Returns a list of the three RGB values that correspond to <color> in <\$widget>.
+
+\Xi{\$widget|->|\kwd{rootx};}
+Returns the x-coordinate, in the root window of the screen, of the
+upper-left corner of <\$widget> (including its border).
+
+\Xi{\$widget|->|\kwd{rooty};}
+Returns the y-coordinate, in the root window of the screen, of the
+upper-left corner of <\$widget> (including its border).
+
+\Xi{\$widget|->|\kwd{server};}
+Returns server information on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{screen};}
+Returns the name of the screen associated with <\$widget>, in the form
+<displayName.screenIndex>.
+
+\Xi{\$widget|->|\kwd{screencells};}
+Returns the number of cells in the default color map for <\$widget>'s
+screen.
+
+\Xi{\$widget|->|\kwd{screendepth};}
+Returns the depth (bits per pixel) of <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{screenheight};}
+Returns the height in pixels of <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{screenmmheight};}
+Returns the height in millimeters of <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{screenmmwidth};}
+Returns the width in millimeters of <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{screenvisual};}
+Returns the visual class of <\$widget>'s screen. Maybe one of: 'directcolor',
+'grayscale', 'pseudocolor', 'staticcolor', 'staticgray', or 'truecolor'.
+
+\Xi{\$widget|->|\kwd{screenwidth};}
+Returns the width in pixels of <\$widget>'s screen.
+
+\Xi{\$widget|->|\kwd{toplevel};}
+Returns the pathname of the toplevel window containing <\$widget>.
+
+\Xi{\$widget|->|\kwd{visual};}
+Returns the visual class of <\$widget> (see \$widget|->|\kwd{screenvisual}).
+
+\Xi{\$widget|->|\kwd{visualsavailable};}
+Returns a list whose elements describe the visuals available for
+<\$widget>'s screen including class and depth..
+
+\Xi{\$widget|->|\kwd{vrootheight};}
+Returns the height of the virtual root window associated with <\$widget>.
+
+\Xi{\$widget|->|\kwd{vrootwidth};}
+Returns the width of the virtual root window associated with <\$widget>.
+
+\Xi{\$widget|->|\kwd{vrootx};}
+Returns the x-offset of the virtual root window associated with <\$widget>.
+
+\Xi{\$widget|->|\kwd{vrooty};}
+Returns the y-offset of the virtual root window associated with <\$widget>.
+
+\Xi{\$widget|->|\kwd{width};}
+Returns <\$widget>'s width in  pixels.
+
+\Xi{\$widget|->|\kwd{x};}
+Returns x-coordinate, in <\$widget>'s parent, of the upper-left corner of
+<\$widget>.
+
+\Xi{\$widget|->|\kwd{y};}
+Returns y-coordinate, in <\$widget>'s parent, of the upper-left corner of
+<\$widget>.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% THE wm COMMAND %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The Window Manager}
+
+Many of the following methods have one or more optional arguments
+which, when specified, set something, but when missing, get something.
+The widget is typically a MainWindow or a Toplevel.
+
+\begin{enum}{1cm}
+
+\Xi{\$mw|->|\kwd{aspect}(<?minNumer, minDenom, maxNumer, maxDenom?>);}
+Inform window manager of desired aspect ratio range for <\$mw>.
+
+\Xi{\$mw|->|\kwd{client}(?<name>?);}
+Store <name> in <\$mw>'s {\bf WM\_CLIENT\_MACHINE} property. Informs
+window manager of client machine on which the application is running.
+
+\Xi{\$mw|->|\kwd{colormapwindows}(?<windowList>?);}
+Store <windowList> in <\$mw>'s {\bf WM\_COLORMAP\_WINDOWS} property
+which identifies the internal windows within <\$mw> with private
+colormaps.
+
+\Xi{\$mw|->|\kwd{command}(?<value>?);}
+Store <value> in <\$mw>'s {\bf WM\_COMMAND} property. Informs window manager
+of command used to invoke the application.
+
+\Xi{\$mw|->|\kwd{deiconify};}
+Arrange for <\$mw> to be mapped on the screen.
+
+\Xi{\$mw|->|\kwd{focusmodel}(?|'active'|\||'passive'|?);}
+Specifies the focus model for <\$mw>.
+
+\Xi{\$mw|->|\kwd{frame};}
+Returns the X window identifier for the outermost decorative frame
+containing <\$mw>. If <\$mw> has none, returns X id of <\$mw> itself.
+
+\Xi{\$mw|->|\kwd{geometry}(?<newGeometry>?);}
+Changes geometry of <\$mw> to <newGeometry>.
+
+\Xi{\$mw|->|\kwd{grid}(?<baseWidth, baseHeight, widthInc, heightInc>?);}
+Indicates that <\$mw> is to be managed as a gridded window with the
+specified relation between grid and pixel units.
+
+\Xi{\$mw|->|\kwd{group}(?<pathName>?);}
+Gives path name for leader of group to which <\$mw> belongs.
+
+\Xi{\$mw|->|\kwd{iconbitmap}(?<bitmap>?);}
+Specifies a bitmap to use as icon image when <\$mw> is iconified.
+
+\Xi{\$mw|->|\kwd{iconify};}
+Arrange for <\$mw> to be iconfied.
+
+\Xi{\$mw|->|\kwd{iconmask}(?<bitmap>?);}
+Specifies a bitmap to use to mask icon image when <\$mw> is iconified.
+
+\Xi{\$mw|->|\kwd{iconname}(?<newName>?);}
+Specifies name to use as a label for <\$mw>'s icon.
+
+\Xi{\$mw|->|\kwd{iconposition}(?<x, y>?);}
+Specifies position on root window to place <\$mw>'s icon.
+
+\Xi{\$mw|->|\kwd{iconwindow}(?<pathName>?);}
+Sets path name of window to use as the icon when <\$mw> is iconified.
+
+\Xi{\$mw|->|\kwd{maxsize}(?<width, height>?);}
+Specifies maximum size <\$mw> may be resized to in each direction.
+
+\Xi{\$mw|->|\kwd{minsize}(?<width, height>?);}
+Specifies minimum size <\$mw> may be resized to in each direction.
+
+\Xi{\$mw|->|\kwd{overrideredirect}(?<boolean>?);}
+Set or unset the override-redirect flag of <\$mw> commonly used by
+window manager to determine whether window should decorative frame.
+
+\Xi{\$mw|->|\kwd{positionfrom}(?|'program'|\||'user'|?);}
+Indicate from whom the <\$mw>'s current position was requested.
+
+\Xi{\$mw|->|\kwd{protocol}(?<name>? ?<callback>?);}
+Specify a Perl callback to be invoked for messages of protocol <name>.
+
+\Xi{\$mw|->|\kwd{resizable}(?<widthBoolean>, <heightBoolean>?);}
+Specifies whether <\$mw>'s width and/or height is resizable.
+
+\Xi{\$mw|->|\kwd{sizefrom}(?|program|\||user|?);}
+Indicate from whom the <\$mw>'s current size was requested.
+
+\Xi{\$mw|->|\kwd{state};}
+Returns current state of <\$mw>: |normal|, |iconic|, or |withdrawn|.
+
+\Xi{\$mw|->|\kwd{title}(?<string>?);}
+Set title for <\$mw>'s decorative frame to <string>.
+
+\Xi{\$mw|->|\kwd{transient}(?<master>?);}
+Informs window manager that <\$mw> is a transient of the window <master>.
+
+\Xi{\$mw|->|\kwd{withdraw};}
+Arranges for <\$mw> to be withdrawn from the screen.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% GEOMETRY MANAGEMENT %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Geometry Management}
+
+\subsection*{The pack Command}
+\vspace{-4pt}
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{pack}(?<-options>?);}
+Details how slave window \$widget should be managed.
+
+\end{enum}
+
+\begin{tabbing}
+|  |\=|               |\=|              |\= \kill
+   \> -after |=>| <sibling>  \> -in |=>| <master>     \> -pady |=>| <pixels> \\ 
+   \> -anchor |=>| <anchor>	\> -ipadx |=>| <pixels>  \> -fill |=>| |none|\||x|\||y|\||both| \\
+   \> -before |=>| <sibling>	\>  -ipady |=>| <pixels> \> -side |=>| |top|\||bottom|\||left|\||right| \\
+   \> -expand |=>| <boolean> \>  -padx |=>| <pixels> \\  
+\end{tabbing}
+
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{packForget};}
+Unmanages the given slave.
+
+\Xi{\$widget|->|\kwd{packInfo};}
+Returns list containing current pack configuration.
+
+\Xi{\$master|->|\kwd{packPropagate}(?<boolean>?);}
+Enables or disables propogation for the window <\$master>.
+
+\Xi{\$master|->|\kwd{packSlaves};}
+Returns lists of slaves in the window <\$master>.
+
+\end{enum}
+
+\subsection*{The place Command}
+\vspace{-4pt}
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{place}(<-option> |=>| <value> ?, <-option> |=>| <value ...>?);}
+Details how \$widget should be managed.
+
+\end{enum}
+
+\begin{tabbing}
+|  |\=|               |\=|              |\= \kill
+ \> -anchor |=>| <anchor>    \> -relheight |=>| <size> \> -x |=>| <location> \\
+ \> -height |=>| <size>	\> -relwidth |=>| <size>  \> -y |=>| <location> \\
+ \> -in |=>| <master>	\> -relx |=>| <location>  \> -bordermode |=>| |inside|\||outside|\||ignore| \\
+ \> -width |=>| <size>	\> -rely |=>| <location>  \\
+\end{tabbing}
+
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{placeForget};}
+Unmanages <\$widget>.
+
+\Xi{\$widget|->|\kwd{placeInfo};}
+Returns list containing current place configuration of <\$widget>.
+
+\Xi{\$master|->|\kwd{placeSlaves};}
+Returns lists of slaves in the window <\$master>.
+
+\end{enum}
+
+\subsection*{The grid Command}
+\vspace{-4pt}
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{grid}(?<-option => value ...>?);}
+
+\end{enum}
+
+\begin{tabbing}
+|  |\=|               |\=|              |\= \kill
+ \> -column |=>| <n>    	\> -ipady |=>| <amount> \> -row |=>| <n> \\
+ \> -columnspan |=>| <n>	\> -padx |=>| <amount>  \> -rowspan |=>| <n> \\
+ \> -in |=>| <other>		\> -pady |=>| <amount>  \> -sticky |=>| ?|n|??|s|??|e|??|w|? \\
+ \> -ipadx |=>| <amount>	\> \\
+\end{tabbing}
+
+\begin{enum}{1cm}
+
+\Xi{\$master|->|\kwd{gridBbox}(<column>, <row>);}
+Returns an <approximate> bounding box in pixels of space occupied by <column>, <row>.
+
+% \Xi{\$master|->|\kwd{gridColumnconfigure}(<column> ?, |-minsize =>| <size>? ?, |-weight =>| <int>?);}
+\item[\$master|->|\kwd{gridColumnconfigure}(<column> ?, |-minsize =>| <size>?]
+  ?, |-weight =>| <int>?);\strut\newline
+Set/get minimum column size and relative column weight.
+
+\Xi{\$slave|->|\kwd{gridForget};}
+Removes (and unmaps) <\$slave> from grid of its master.
+
+\Xi{\$slave|->|\kwd{gridInfo};}
+Returns list describing configuration state of <\$slave>.
+
+\Xi{\$master|->|\kwd{gridLocation}(<x>, <y>);}
+Returns column and row containing screen units <x> <y> in <\$master>.
+If <x>, <y> is outside grid, -1 is returned.
+
+\Xi{\$master|->|\kwd{gridPropagate}(?<boolean>?);}
+Set/get whether <\$master> tries to resize its ancestor windows to fit grid.
+
+% \Xi{\$master|->|\kwd{gridRowconfigure}(<row> ?, |-minsize =>| <size>? ?, |-weight =>| <int>?);}
+\item[\$master|->|\kwd{gridRowconfigure}(<row> ?, |-minsize =>| <size>?]
+  ?, |-weight =>| <int>?);\strut\newline
+Set/get minimum row size and relative row weight.
+
+\Xi{\$master|->|\kwd{gridSize};}
+Returns size of grid (in columns then rows) for <\$master>.
+
+\Xi{\$master|->|\kwd{gridSlaves}(?|-row => | <row>? ?|-column =>| <column>?);}
+With no options, a list of all slaves in <\$master> is returned.
+Otherwise, returns a list of slaves in specified row and/or column.
+
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% BINDING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Bindings}
+
+Note that \kwd{bind} <callbacks> are implicitly passed the bound widget reference
+as the first argument of the parameter list.
+
+\begin{enum}{1cm}
+\Xi{\$widget|->|\kwd{bind};}
+Returns list of all event descriptors for which a binding exists for <\$widget>.
+
+\Xi{\$widget|->|\kwd{bind}(<tag>);}
+Returns list of all event descriptors for which a binding exists for <tag>.
+
+\Xi{\$widget|->|\kwd{bind}(|\lt|<modifier-modifier-type-detail>|\gt|);}
+Returns the callback bound to the given event descriptor for <\$widget>.
+
+\Xi{\$widget|->|\kwd{bind}(<tag>, |\lt|<modifier-modifier-type-detail>|\gt|);}
+Returns the callback bound to the given event descriptor for <tag>.
+
+\Xi{\$widget|->|\kwd{bind}(|\lt|<modifier-modifier-type-detail>|\gt| |=>| <callback>);}
+Binds <callback> to the given sequence for <\$widget>
+
+\Xi{\$widget|->|\kwd{bind}(<tag>, |\lt|<modifier-modifier-type-detail>|\gt| |=>| <callback>);}
+Binds <callback> to the given sequence for <tag>
+
+\Xi{\$widget|=>|\kwd{bindtags}(?<tagList>?);}
+Sets the current precedence order of tags for <\$widget> to <tagList>.
+By default a Perl/Tk widget's <taglist> is (<class, instance, toplevel,> 'all').  Note that
+this ordering differs from that of Tcl/Tk's (<instance, class, toplevel,> 'all').
+
+\end{enum}
+
+\vskip6pt
+{\bf Modifiers:}
+\begin{tabbing}
+|  |\=|          |\=|             |\=|             |\= \kill
+   \> Any	 \> Triple        \> Button5, B5   \> Mod3, M3 \\
+   \> Control	 \> Button1, B1   \> Meta, M       \> Mod4, M4 \\ 	
+   \> Shift	 \> Button2, B2   \> Mod1, M1      \> Mod5, M5 \\ 	
+   \> Lock	 \> Button3, B3   \> Mod2, M2      \> Alt \\      	
+   \> Double	 \> Button4, B4 \\
+\end{tabbing}
+
+{\bf Types:}
+\begin{tabbing}
+|  |\=|                   |\=|                  |\= \kill
+   \> ButtonPress, Button \> Expose             \> Leave \\     
+   \> ButtonRelease       \> FocusIn            \> Map \\       
+   \> Circulate           \> FocusOut           \> Property \\  
+   \> Colormap		  \> Gravity            \> Reparent \\  
+   \> Configure           \> KeyPress, Key      \> Unmap \\     
+   \> Destroy		  \> KeyRelease         \> Visibility \\
+   \> Enter		  \> Motion \\
+\end{tabbing}
+
+\begin{tabbing}
+|       |\= \kill
+{\bf Details:} \> for buttons, a number 1-5 \\
+	\> for keys, a keysym (/usr/include/X11/keysymdef.h) \\
+\\
+{\bf Tags:}    \>  widget instance (applies to just that window) \\
+	\>  toplevel window (applies to all its internal windows) \\
+	\>  class name (applies to all widgets in class) \\
+	\>  |'all'| (applies to all windows)
+\end{tabbing}
+
+{\bf Codes:}  pass to XEvent structure (see below)
+\begin{tabbing}
+|  |\=|    |\=|                    |\=|    |\= \kill
+   \> \% \> single \% sign    \> w \> <width> field  \\
+   \> \# \> last event's <serial> field    \> x \> <x> field  \\
+   \> a  \> <above> field     \> y \> <y> field  \\
+   \> b  \> button number     \> A \> ASCII character  \\
+   \> c  \> <count> field     \> B \> <border\_width> field  \\
+   \> d  \> <detail> field    \> E \> <send\_event> field  \\ 
+   \> f  \> <focus> field     \> K \> keysym as text  \\      
+   \> h  \> <height> field    \> N \> keysym as decimal  \\   
+   \> k  \> <keycode> field   \> R \> <root> window  \\       
+   \> m  \> <mode> field      \> S \> <sub\_window> identifier  \\
+   \> o  \> <override\_redirect> field \> T \> <type> field  \\
+   \> p  \> <place> field     \>  W \> window pathname  \\
+   \> s  \> <state> field     \> X \> <x\_root> field  \\ 
+   \> t  \> <time> field      \> Y \> <y\_root> field  \\ 
+\end{tabbing}
+\vspace{-8pt}
+
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{break};}
+Exit <callback> and shortcircuit \kwd{bindtags} search.
+
+\Xi{\$eventStructure = \$widget|->|\kwd{XEvent};}
+Fetch the X11 event structure, then
+invoke the<\$eventStructure> method and pass one of the preceeding
+<Codes> to fetch the corresponding X-Event field information for \$widget.
+
+\Xi{\$eventStructure = \kwd{\$Tk::event};}
+A binding can localize the X11 event structure with \kwd{\$Tk::event}
+rather than calling \kwd{XEvent}. 
+
+\Xi{\$eventField = \kwd{Ev}(<Code>);}
+Binding callbacks can be nested using the \kwd{Ev(...)} "constructor". \kwd{Ev(...)}
+inserts callback objects into the argument list. When Perl/Tk prepares the argument
+list for the callback it is about to call it spots these special
+objects and recursively applies the callback process to them. 
+ 
+\end{enum}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% OTHER TK COMMANDS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Other Perl/Tk Commands}
+
+\begin{enum}{1cm}
+
+\Xi{\$widget|->|\kwd{appname}(?<newName>?);}
+Set the interpreter name of the application to <newName>.
+
+\Xi{\$widget|->|\kwd{bell};}
+Ring the X bell on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{bisque};}
+Set default color palette to old bisque scheme.
+
+\Xi{\$widget|->|\kwd{clipboardClear};}
+Claim ownership of clipboard on <\$widget>'s display, clearing its contents.
+
+\Xi{\$widget|->|\kwd{clipboardAppend}(?|-format =>| <fmt>? ?|-type =>| <type>? <data>);}
+Append <data> to clipboard on <widget>'s display.
+
+\Xi{\$widget|->|\kwd{destroy};}
+Destroy the given window and its descendents.
+
+\Xi{\kwd{Exists}(\$widget);}
+Returns 1 if there exists a window for \$widget, '' (false) if no such window exists. 
+
+\Xi{\$widget|->|\kwd{focus};}
+Set focus window to <\$widget>.
+
+\Xi{\$widget|->|\kwd{focusCurrent};}
+Returns focus window on \$widget's display.
+
+\Xi{\$widget|->|\kwd{focusFollowsMouse};}
+Change focus model of application so focus follows the mouse pointer.
+
+\Xi{\$widget|->|\kwd{focusForce};}
+Sets the input focus for <\$widget>'s display to <\$widget>
+even if another application has it.
+
+\Xi{\$widget|->|\kwd{focusLast};}
+Returns the window which most recently had focus and is a descendent
+of <\$widget>'s toplevel.
+
+\Xi{\$widget|->|\kwd{focusNext};}
+Returns the next window after <\$widget> in focus order.
+
+\Xi{\$widget|->|\kwd{focusPrev};}
+Returns the previous window before <\$widget> in focus order.
+
+\Xi{\$widget|->|\kwd{grabCurrent};}
+Returns name of current grab window on <\$widget>'s display. If <\$widget> is
+omitted, returns list of all windows grabbed by the application.
+
+\Xi{\$widget|->|\kwd{grabRelease};}
+Releases grab on <\$widget>.
+
+\Xi{\$widget|->|\kwd{grab};}
+Sets a local grab on <\$widget>.
+
+\Xi{\$widget|->|\kwd{grabGlobal};}
+Sets a global grab.
+
+\Xi{\$widget|->|\kwd{grabStatus};}
+Returns |none|, |local|, or |global| to describe grab state of <\$widget>.
+
+\Xi{\$widget|->|\kwd{lower}(?<belowThis>?);}
+Places <\$widget> below window <belowThis> in stacking order.
+
+\Xi{\$widget|->|\kwd{optionAdd}(<pattern> |=>| <value> ?, <priority>?);}
+Adds option with <pattern value> at <priority> (0-100) to database.
+
+\Xi{\$widget|->|\kwd{optionClear} }
+Clears option database and reloads from user's Xdefaults.
+
+\Xi{\$widget|->|\kwd{optionGet}(<name, class>);}
+Obtains option value for <\$widget> under <name> and <class> if present.
+
+\Xi{\$widget|->|\kwd{optionReadfile}(<pathName> ?, <priority>?);}
+Reads options from Xdefaults-style file into option database at <priority>.
+
+\Xi{\$widget|->|\kwd{Popup}(<menu, x, y> ?, <entry>?);}
+Post popup <menu> so that <entry> is positioned at root coords <x y>.
+
+\Xi{\$widget|->|\kwd{raise}(?<aboveThis>?);}
+Places <\$widget> above window <aboveThis> in stacking order.
+
+\Xi{\$widget|->|\kwd{selectionClear}(?|-selection =>| <selection>?);}
+Clears <selection> (default {\bf PRIMARY}) on <\$widget>'s display.
+
+\Xi{\$widget|->|\kwd{selectionGet}(?|-selection =>| <selection>? ?|-type =>| <type>?);}
+Retrieves <selection> from <\$widget>'s <display> using representation <type>.
+
+% \Xi{\$widget|->|\kwd{selectionHandle}(?|-selection =>| <sel>? ?|-type =>| <type>? \newline ?|-format =>| <fmt>? <win => callback>)}
+\item[\$widget|->|\kwd{selectionHandle}(?|-selection =>| <sel>? ?|-type =>| <type>?]
+  ?|-format =>| <fmt>? |win =>| <callback>);\strut\newline
+Arranges for <callback> to be run whenever <sel> of <type> is owned by <win>.
+
+\Xi{\$widget|->|\kwd{selectionOwner}(?|-selection =>| <selection>?);}
+Returns path name of <\$widget> which owns <selection> on <\$widget>'s display.
+
+% \Xi{\$widget|->|\kwd{selectionOwn}(?|-selection =>| <selection>? ?|-command =>| <callback>?);}
+\item[\$widget|->|\kwd{selectionOwn}(?|-selection =>| <selection>?]
+  ?|-command =>| <callback>?);\strut\newline
+Causes <\$widget> to become new owner of <selection> and arranges for
+<command> to be run when <\$widget> later loses the <selection>.
+
+\Xi{\$widget|->|\kwd{send}(?|-async|? <interp> |=>| <callback>);}
+Execute <callback> in the Tk application <interp> on <\$widget>'s display.
+If |-async| is specified, the \$widget|->|\kwd{send} command will return immediately.
+
+\Xi{\$widget|->|\kwd{setPalette}(<color>);}
+Set the default background color and compute other default colors.
+
+\Xi{\$widget|->|\kwd{setPalette}(<name> |=>| <color> ?, <name> |=>| <color> ...?);}
+Set the default color for the named color options explicitly.
+
+\Xi{\$widget|->|\kwd{waitVariable}(<varRef>);}
+Pause program until global variable <varRef> is modified.
+
+\Xi{\$widget|->|\kwd{waitVisibility};}
+Pause program until <\$widget>'s visibility has changed.
+
+\Xi{\$widget|->|\kwd{waitWindow};}
+Pause program until <\$widget> is destroyed.
+ 
+\end{enum}

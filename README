@@ -1,0 +1,274 @@
+			     INTRODUCTION
+			     ============
+				   
+                      The Perl/Tk Reference Guide
+
+The Perl/Tk Reference Guide is a typeset quick reference guide to Nick
+Ing-Simmon's Perl implementation of John Ousterhout's Tk toolkit. The guide
+style is based on Johan Vromans' guide for Perl.
+
+It contains a concise description of (almost) all Perl/Tk statements,
+variables and lots of other useful information. The Guide is based on Perl
+version 5.004 and Tk 4.2.
+
+The purpose of the Reference Guide is to aid in the use of Perl/Tk, to look
+up the syntax of specific commands, statements and the meaning of built-in
+variables. It is *NOT* a self-contained user guide - basic knowledge of the
+Perl and Tk languages is required. It is *NOT* complete - some of the more
+obscure variants of Tk constructs have been left out. But all commands and
+variables are mentioned in at least one way they can be used.
+
+The Reference Guide is designed and created by Johan Vromans using the LaTex
+typesetting system. For best results, Tom Rockiki's dvips 5.47 should be used
+to generate the PostScript output. Your mileage may vary when you use other
+output mechanisms.
+
+*** IMPORTANT ***
+
+The included file refbase.ps contains the basic guide in 44 pages formated
+for A4 paper. This is almost definitely NOT what you want to print.  A
+special formatting tool, written in Perl, makes it possible to reformat this
+PostScript output for reproduction in a number of formats. If you cannot run
+this tool, you probably don't have perl installed. To get it, try
+http://www.perl.com/perl/.
+
+
+INSTALLATION
+============
+
+ 1. Unload the distribution
+
+    After unloading the distribution, you will have the following
+    files in a suitably named sub-directory:
+
+	README	    - this file
+	Makefile    - makefile
+	parr.pl	    - reformat and rearrange tool
+	Layout	    - description of the format
+	refbase.tex - LaTeX source for the Reference Guide
+	refbase.cls - LaTeX class for the Reference Guide
+	refbase.ps  - pre-generated PostScript base
+	testbase.ps - alignment test page
+	Makefile.psutils - makefile to be used with psutils
+	PROBLEMS    - known problems on certain printers
+
+    The lastest distribution can be found at
+        ftp://ftp.lehigh.edu/pub/perl5/
+    or at your nearest CPAN site
+        CPAN/authors/id/LUSOL/
+
+ 2. Create the PostScript base file ( *** IF NEEDED *** )
+
+    *** Normally you can skip this step since a pre-generated
+        PostScript file is included in the kit.
+
+    This step requires the LaTeX typesetting system, version 2e of
+    1994/12/01, and dvips version 5.47 or later. Earlier 2e versions
+    of LaTeX may work, but have not been verified.
+
+    - Use "make refbase-ps" (a dash, not a dot) to create a new
+      PostScript file from the LaTeX source. This file can be printed
+      normally. 
+
+    NOTE: dvips must be instructed to use a4 format paper ('-t a4')
+	  even if you intend to print on a different format!
+
+ 3. Determine the paper format and alignment
+
+    As distributed, the Makefile is configured to generate output for
+    US Letter (8.5 x 11") paper format. Comment out the line "PAPER=-letter"
+    in the Makefile to select A4 (21 x 29.7 cm) format. Both
+    formats should be printable on industry-standard PostScript
+    printers.
+
+    Now "make testpage.ps" and print it. The test page contains a
+    scale. Find the center of the paper by folding it as illustrated
+    and determine the value on the scale where the center of the paper
+    intersects the scale. Add this value to the definition of HALIGN
+    in the Makefile (initially 0). It is important that you modify the
+    Makefile otherwise the test page will not be re-generated with the
+    modified values.
+
+    "make testpage.ps" once again and print it. Folding it should show
+    that the center of the paper is at scale value 0. If not, repeat
+    the process.
+
+    For example, if your print looks like:
+
+                                   :                           
+     100                           :         0                 
+     |---+---+---+---+---+---+---+-:-+---+---|---+---+---+---+---+--
+                                   :                           
+                                   :<- center of paper
+
+    The value of HALIGN should be increased with 25.
+
+    You can adjust the vertical offset by modifying VALIGN although
+    this should rarely be necessary. Vertical alignment uses the same
+    units as the horizontal alignment, positive offsets move the image
+    down on the paper.
+
+    NOTE: Do not print from Ghostview or other PostScript viewing
+          tools since this can lead to mis-aligned prints.
+
+    NOTE: If you have Angus Duggan's psutils package installed you can
+          use Makefile.psutils instead. However, this is not
+          supported by me.
+          Angus' email address is <angus@harlequin.co.uk> .
+
+ 4. Create the RefGuide from the PostScript base
+
+    You can use "make" to generate a new PostScript file for one of
+    the following formats:
+
+     - Use "make refguide.ps" to create a guide formatted in pages
+       of 2-column text. It should be printed double-sided, stapled in
+       the middle, folded, and cut to size to have a 24-page 4.25 x 8"
+       booklet. See the "Layout" document.
+
+     - Use "make 2pass" to create a set of odd and even pages for
+       double sided printing. First print "guide-odd.ps". Then put the
+       paper back in the tray, and print either "guide-even1.ps" or
+       "guide-even2.ps", depending on the way your printer arranges
+       the printed paper.
+       "guide-even1.ps" is for printers with correct output stacking like
+       Apple LaserWriter II. 
+       "guide-even2.ps" is for printers with reverse output stacking,
+       like old Apple LaserWriters. 
+       In other words, after printing "guide-odd.ps", if the
+       text of the front page is on top -- use "guide-even1.ps".
+       But if you're looking at the text of the middle pages -- use
+       "guide-even2.ps". 
+
+    "make" without arguments will default to refguide.ps.
+
+    NOTE: If you have Angus Duggan's psutils package installed you can
+          use Makefile.psutils instead. However, this is not
+          supported by me.
+
+    On printers that support it, duplex printing is attempted. See the
+    Makefile for details. This does not apply to Makefile.psutils.
+
+    See also the file PROBLEMS.
+
+Comments are welcome, send them to the Reference Guide author.
+
+DETAILED HELP
+=============
+
+Implementors like John Ousterhout and Nick Ing-Simmons are busy people, so
+don't bother them with Perl or Tk or Tcl questions, but use a newsgroup
+instead:
+
+	comp.lang.perl.misc
+	comp.lang.perl.tk
+	comp.lang.tcl
+
+HISTORY
+=======
+
+The first version of the Reference Guide --"reference card" it was
+called then-- appeared in 1989 with Perl version 2. It was created
+using an Apple Macintosh and the RagTime DeskTop publishing tool. It
+was 9 pages, if I remember well. The PostScript output was extracted
+from the Mac and hacked for 'normal' use with the macps program.
+
+With Perl version 3 came the next version. A 15-page card format, and
+a 16-page reference guide. This time, the Guide was created using
+MicroSoft Word, again on Macintosh. Tools were supplied to manipulate
+the PostScript file to suit different printing formats. In a later
+version, the card format was abandoned.
+
+Next came the Camel version, with Perl version 4. Much effort was
+spent to have the abundance of new functions fit on 16 pages.
+
+After the book appeared, I decided to rework the Guide to use more
+pages, and different styles and fonts for clarity. I reworked the
+MS-Word version, to find out that the resultant PostScript file had
+increased from 90Kb to 180Kb! 
+So I decided to start again, from scratch (well, almost) using the
+LaTeX typesetting system. The resultant PostScript file is now 80Kb,
+while it prints out almost identical to the 180Kb MS-Word version.
+
+When Perl 5 came out, the Guide was reworked to include the plethora
+of new features while still trying to be concise. 
+I also used a scan of the Camel to create a real cover page.
+Tim O'Reilly (O'Reilly & Associates, Inc.) wrote me:
+
+    You can do this, as long as you say somewhere in your text,
+    "The camel as an image associated with perl is a trademark
+    of O'Reilly & Associates, Inc. and is used with permission."
+
+    Trademarks are funny. If you don't use due diligence to protect
+    them, you lose them. We've applied to treat all our cover animals
+    as trademarks, so they don't get abused by other publishers, and
+    we need to acknowledge them as such if they are used elsewhere.
+
+Thanks Tim, for the permission.
+
+Paul Raines then borrowed the style file and other support files
+to create a Reference Guide for Tcl/Tk.
+
+Steve Lidie then borrowed Paul Raines' Tcl/Tk files to create a
+Reference Guide for Perl/Tk.
+
+COPYRIGHT
+=========
+
+The Perl Reference Guide is copyrighted by the author. It may be
+reproduced, printed and distributed freely for non-profit purposes, as
+long as the original author gets the credits, and the copyright notice
+is not removed from the text. It may not be turned into a commercial
+product except with written permission of the author.
+
+---------------------------- author info -----------------------------
+Johan Vromans                                     jvromans@squirrel.nl
+Squirrel Design & Consultancy                 Boskoop, the Netherlands
+http://www.xs4all.nl/~jvromans           http://www.xxlink.nl/squirrel
+----------------------------------------------------------------------
+
+CREDITS
+=======
+
+I like to thank everyone who has helped me (and encouraged me) to get
+the job done, and to get the results to you. Especially Tom
+Christiansen and JGreely (for "parr") And Larry Wall, of course,
+without whom I would have spent lots of time annoying myself.
+
+CREDITS FOR TCL/TK REFERENCE GUIDE
+==================================
+
+The Tcl/Tk Reference Guide is copyrighted by the author. It may be
+reproduced, printed and distributed freely, as long as the original
+author gets the credits, and the copyright notice is not removed from
+the text. It may not be turned into a commercial product except with
+written permission of the author.
+
+---------------------------- author info -----------------------------
+                            Paul Raines
+             MS 42 Stanford Linear Accelerator Center
+                  Stanford, California 94309-4349
+                        tel. (415) 926 4378
+                  email: <raines@slac.stanford.edu>
+----------------------------------------------------------------------
+
+Thanks to Jeff Tranter for Tcl reference parts and of course
+John Ousterhout for creating Tcl and Tk.
+
+CREDITS FOR PERL/TK REFERENCE GUIDE
+===================================
+
+I can't see how I can take credit for anything (-: This guide, of course, may
+be reproduced, printed and distributed freely under the sames terms as Perl
+itself, but may not be used commercially without my permission.
+
+---------------------------- author info -----------------------------
+Stephen.O.Lidie@Lehigh.EDU
+Lehigh University Computing Center, USA
+----------------------------------------------------------------------
+
+-- PostScript is a trademark of Adobe, I assume.
+
+
+
+

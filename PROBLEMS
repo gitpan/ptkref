@@ -1,0 +1,52 @@
+Known Problems
+==============
+
+Printers
+--------
+
+* No difference between de ' and ` quotes.
+  This is a printer font problem. A close inspection shows that
+  the ' (right quote) is thicker at the top while ` (the left quote) is
+  thicker at the bottom.
+
+* Printer: Panasonic KX-P5400. (janet@uniwa.uwa.edu.au)
+  The Guide and cover page print fine, except for one thing:  printing the
+  cover page leaves the printer in a state where the reference guide does
+  not print.  (The printer eats the file:  it appears to process the
+  Postscript, then wait for a while for more input, and eventually give up.)
+  Resetting the printer (to User Defaults, see page 39 of the the printer
+  manual for instructions) fixes it.  Printing a fairly ordinary one-page
+  postscript file (some troff output) also fixed it.  I don't know enough
+  about the printer or PostScript to be able to say why this problem occurred,
+  but it may be worth mentioning it in the documentation.
+
+* Some printers (or printing systems) seem to have problems with the
+
+    %%Feature: *Resolution 300dpi
+
+  line in the postscript file. This line can be safely deleted if needed.
+
+* The PostScript file, as distributed, selects A4 paper format. This
+  is intentional, even for US Letter paper format.
+  If your printer chokes on this, you can change the line 
+ 
+    a4
+
+  info
+
+    letter
+
+  (And you'll probably have to adjust the document alignment
+  parameters as well.) 
+
+LaTeX and DviPS
+---------------
+* I used TeX 3.1415N with LaTeX2e <1994/12/01> patch level 3.
+  Older LaTeX2e versions may work, LaTeX 2.09 will not.
+
+* Dvips is known to work as of version 5.47. I used 5.58a.
+
+Angus Dunnan's PostScript utilities
+-----------------------------------
+* Makefile.psutils can be used to create A4 based reference copies
+  using psutils version 1.13. Your mileage may vary.
