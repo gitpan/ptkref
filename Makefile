@@ -3,15 +3,16 @@
 ################ Configuration ################
 
 SHELL	= /bin/sh
-PERL	= perl
+PERL	= perl5
 LATEX	= latex
+MAKEIDX = makeindex
 DVIPS	= dvips
 
 # Uncomment this if your printer has US letter format paper.
 PAPER	= -letter
 
 # Uncomment this if your printer supports duplex printing.
-#DUPLEX	= -duplex
+DUPLEX	= -duplex
 
 # Alignment. See README for details.
 HALIGN	= 0
@@ -66,11 +67,11 @@ guide-test.ps:	refbase.ps parr.pl
 clean:
 	rm -f refguide.ps guide-odd.ps guide-even1.ps guide-even2.ps \
 		refbase.dvi core refbase.aux refbase.log \
-		refbase.toc *~
+		refbase.toc refbase.idx refbase.ilg refbase.ind *~
 
 # The remainder of this Makefile is for maintenance use only.
 
-VER	= 4.2
+VER	= 8.0
 REV     = 0
 
 SRC	= refbase.tex refbase.cls testbase.ps reftk.tex
@@ -82,13 +83,17 @@ refbase-ps:	refbase.dvi
 
 refbase.dvi:	$(SRC)
 	touch refbase.toc
-	@rm -f refbace.toc~
+	touch refbase.ind
+	@rm -f refbace.toc~ refbase.ind~
 	@cat refbase.toc > refbase.toc~
+	@cat refbase.ind > refbase.ind~
 	$(LATEX) refbase.tex < /dev/null
-	@if cmp refbase.toc refbase.toc~ > /dev/null 2>&1; \
+	@if cmp refbase.toc refbase.toc~ > /dev/null 2>&1 \
+	    && cmp refbase.ind refbase.ind~ > /dev/null 2>&1 ; \
 	then \
 	    true; \
 	else \
+	    $(MAKEIDX) refbase.idx < /dev/null ; \
 	    echo "$(LATEX) refbase.tex \< /dev/null"; \
 	    $(LATEX) refbase.tex < /dev/null; \
 	fi

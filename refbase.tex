@@ -2,6 +2,10 @@
 
 \documentclass{refbase}
 
+\usepackage{makeidx}
+\makeindex
+\newcommand{\Idx}[1]{\index{#1@\kwd{#1}}}
+
 \begin{document}
 
 %\begin{titlepage}
@@ -14,29 +18,15 @@
 % \hbox{~}
 % \addvspace{22mm}
 
-\unnumbered{Perl/Tk Reference Guide}
-{\bf for Perl/Tk 402.003 - Perl 5.004 / Tk \tkrev}
-
-\vfill
-Perl program designed and created by \\
-Larry Wall |<larry@wall.org>|
-
-\vfill
-Tk designed and created by \\
-John Ousterhout |<John.Ousterhout@Eng.Sun.COM>|
+\unnumbered{Perl/Tk Pocket Reference}
+{\bf for Perl/Tk 800.005 - Perl 5.004 / Tk \tkrev}
 
 \vfill
 Perl/Tk designed and created by \\
 Nick Ing-Simmons |<nick@ni-s.u-net.com>|
 
 \vfill
-Reference guide format designed and created by \\
-Johan Vromans |<jvromans@squirrel.nl>|
-
-\vfill
-Reference guide contents written by \\
-Paul Raines |<raines@slac.stanford.edu>| \\
-Jeff Tranter |<Jeff_Tranter@Mitel.COM>| \\
+Pocket Reference contents written by \\
 Steve Lidie |<Stephen.O.Lidie@Lehigh.EDU>|
 
 \vfill%addvspace{13mm}
@@ -47,6 +37,15 @@ Steve Lidie |<Stephen.O.Lidie@Lehigh.EDU>|
 {\small {Rev. \tkrev.\revision}}
 \end{titlepage}
 \clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%   MAIN BODY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+{\begingroup\catcode`\<=\active
+\def<{\leavevmode\italicizerest}
+\def\italicizerest#1>{{\it{#1}}}
+ 
 \setcounter{page}{2}
 
 \unnumbered{Conventions}
@@ -67,18 +66,17 @@ Steve Lidie |<Stephen.O.Lidie@Lehigh.EDU>|
 
 \input reftk.tex
 
-\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%   INDEX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\unnumbered{Notes}
-\vfill
-\makebox[\textwidth]{Perl/Tk Reference Guide Revision \refrev \hfill
-\copyright 1989,1997}
+\input refbase.ind
 
-\newpage
-
-\unnumbered{Notes}
-\vfill
-\makebox[\textwidth]{Perl/Tk Reference Guide Revision \refrev \hfill
-\copyright 1989,1997}
+%% \newpage
+%% 
+%% \unnumbered{Notes}
+%% \vfill
+%% \makebox[\textwidth]{Perl/Tk Pocket Reference Revision \refrev \hfill
+%% \copyright 1989,1998}
 
 \end{document}

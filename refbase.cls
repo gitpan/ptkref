@@ -1,4 +1,4 @@
-%% refbase.cls -- standard document class for Perl Reference Guide
+%% refbase.cls -- standard document class for Perl Pocket Reference
 %%
 %% RCS Status      : $Id: refbase.cls,v 5.10 1995/12/24 15:03:07 jv Exp $
 %% Author          : Johan Vromans
@@ -10,7 +10,7 @@
 %%
 %%%%%%%%%%%%%%%% Copyright %%%%%%%%%%%%%%%%
 %
-% The Perl Reference Guide and its associated files are 
+% The Perl Pocket Reference and its associated files are 
 %
 % Copyright 1989, 1995 Johan Vromans.
 %
@@ -29,15 +29,14 @@
 \NeedsTeXFormat{LaTeX2e}[1994/12/01]
 \ProvidesClass{refbase}
               [1995/11/20 $Revision: 5.10 $
- Document class for Perl Reference Guide]
-%\def\tkrev{4.2}
-\def\tkrev{402.003}
-\def\PRGfmtname{Perl Reference Guide}
+ Document class for Perl Pocket Reference]
+\def\tkrev{8.0}
+\def\PRGfmtname{Perl Pocket Reference}
 \def\PRGfmtversion{$Revision: 5.10 $}
 \everyjob{\typeout{Document class \PRGfmtname\space\PRGfmtversion}}
 \everyjob{\typeout{for Perl \perlrev.}}
 \def\refrev{\tkrev.\revision}
-\everyjob{\typeout{Reference Guide revision is \refrev.}}
+\everyjob{\typeout{Pocket Reference revision is \refrev.}}
 %
 % epsf.sty must be loaded before psfonts.
 \DeclareOption{epsf}
@@ -48,6 +47,7 @@
 %%%%%%%%%%%%%%%% Other Styles %%%%%%%%%%%%%%%%
 %
 \LoadClass[11pt,twoside]{article}       % standard LaTeX
+\usepackage{multicol}
 %
 %%%%%%%%%%%%%%%% Selection of Fonts %%%%%%%%%%%%%%%%
 %
@@ -87,7 +87,7 @@
 %
 \newlength{\tw}\setlength{\tw}{\textwidth}\addtolength{\tw}{-2pt}
 \def\@refhead#1{%
-    \vbox{\makebox[\textwidth][#1]{\largesl{Perl/Tk Reference Guide}}
+    \vbox{\makebox[\textwidth][#1]{\largesl{Perl/Tk Pocket Reference}}
           \rule[-0.1cm]{\textwidth}{0.5pt}}}
 \def\@reffoot#1{%
     \vbox{\rule[-0.6cm]{\textwidth}{0.5pt}
@@ -142,6 +142,15 @@
        mu$}\hfill \hbox to\@pnumwidth{\hfil #5}}}}
 \renewcommand{\numberline}[1]{\hbox to\@tempdima{\hfil#1.~~}}
 %
+\renewenvironment{theindex}{\newpage
+   \let\item\@idxitem
+   \begin{multicols}{3}[\unnumbered{Index}]
+   \par\bigskip}
+  {\end{multicols}}
+\renewcommand\@idxitem{\par\hangindent 40\p@}
+\renewcommand\subitem{\par\hangindent 40\p@ \hspace*{20\p@}}
+\renewcommand\subsubitem{\par\hangindent 40\p@ \hspace*{30\p@}}
+%
 %%%%%%%%%%%%%%%% Macros %%%%%%%%%%%%%%%%
 %
 \chardef\other=12
@@ -161,10 +170,10 @@
 
 % <var> is used for variable things. 
 % Representation is 10pt sans-serif uppercased.
-\catcode`\<=\active
-\def<{\leavevmode\italicizerest}
-% \def\italicizerest#1>{{\smallsf\uppercase{#1}}}
-\def\italicizerest#1>{{\it{#1}}}
+%% \catcode`\<=\active
+%% \def<{\leavevmode\italicizerest}
+%% % \def\italicizerest#1>{{\smallsf\uppercase{#1}}}
+%% \def\italicizerest#1>{{\it{#1}}}
 
 % LaTeX active and 'hot' characters
 \def\|{\leavevmode\hbox{\ttbf\char`\|}}

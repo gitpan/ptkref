@@ -1,31 +1,31 @@
 			     INTRODUCTION
 			     ============
 				   
-                      The Perl/Tk Reference Guide
+                      The Perl/Tk Pocket Reference
 
-The Perl/Tk Reference Guide is a typeset quick reference guide to Nick
+The Perl/Tk Pocket Reference is a typeset quick reference guide to Nick
 Ing-Simmon's Perl implementation of John Ousterhout's Tk toolkit. The guide
 style is based on Johan Vromans' guide for Perl.
 
 It contains a concise description of (almost) all Perl/Tk statements,
 variables and lots of other useful information. The Guide is based on Perl
-version 5.004 and Tk 4.2.
+version 5.004 and Tk 8.0.
 
-The purpose of the Reference Guide is to aid in the use of Perl/Tk, to look
+The purpose of the Pocket Reference is to aid in the use of Perl/Tk, to look
 up the syntax of specific commands, statements and the meaning of built-in
 variables. It is *NOT* a self-contained user guide - basic knowledge of the
 Perl and Tk languages is required. It is *NOT* complete - some of the more
 obscure variants of Tk constructs have been left out. But all commands and
 variables are mentioned in at least one way they can be used.
 
-The Reference Guide is designed and created by Johan Vromans using the LaTex
+The Pocket Reference is designed and created by Johan Vromans using the LaTex
 typesetting system. For best results, Tom Rockiki's dvips 5.47 should be used
 to generate the PostScript output. Your mileage may vary when you use other
 output mechanisms.
 
 *** IMPORTANT ***
 
-The included file refbase.ps contains the basic guide in 44 pages formated
+The included file refbase.ps contains the basic guide in 48 pages formated
 for A4 paper. This is almost definitely NOT what you want to print.  A
 special formatting tool, written in Perl, makes it possible to reformat this
 PostScript output for reproduction in a number of formats. If you cannot run
@@ -45,8 +45,8 @@ INSTALLATION
 	Makefile    - makefile
 	parr.pl	    - reformat and rearrange tool
 	Layout	    - description of the format
-	refbase.tex - LaTeX source for the Reference Guide
-	refbase.cls - LaTeX class for the Reference Guide
+	refbase.tex - LaTeX source for the Pocket Reference
+	refbase.cls - LaTeX class for the Pocket Reference
 	refbase.ps  - pre-generated PostScript base
 	reftk.tex   - LaTex source for Perl/Tk
 	testbase.ps - alignment test page
@@ -152,7 +152,7 @@ INSTALLATION
 
     See also the file PROBLEMS.
 
-Comments are welcome, send them to the Reference Guide author.
+Comments are welcome, send them to the Pocket Reference author.
 
 DETAILED HELP
 =============
@@ -168,14 +168,14 @@ instead:
 HISTORY
 =======
 
-The first version of the Reference Guide --"reference card" it was
+The first version of the Pocket Reference --"reference card" it was
 called then-- appeared in 1989 with Perl version 2. It was created
 using an Apple Macintosh and the RagTime DeskTop publishing tool. It
 was 9 pages, if I remember well. The PostScript output was extracted
 from the Mac and hacked for 'normal' use with the macps program.
 
 With Perl version 3 came the next version. A 15-page card format, and
-a 16-page reference guide. This time, the Guide was created using
+a 16-page Pocket Reference. This time, the Guide was created using
 MicroSoft Word, again on Macintosh. Tools were supplied to manipulate
 the PostScript file to suit different printing formats. In a later
 version, the card format was abandoned.
@@ -208,15 +208,15 @@ Tim O'Reilly (O'Reilly & Associates, Inc.) wrote me:
 Thanks Tim, for the permission.
 
 Paul Raines then borrowed the style file and other support files
-to create a Reference Guide for Tcl/Tk.
+to create a Pocket Reference for Tcl/Tk.
 
 Steve Lidie then borrowed Paul Raines' Tcl/Tk files to create a
-Reference Guide for Perl/Tk.
+Pocket Reference for Perl/Tk.
 
 COPYRIGHT
 =========
 
-The Perl Reference Guide is copyrighted by the author. It may be
+The Perl Pocket Reference is copyrighted by the author. It may be
 reproduced, printed and distributed freely for non-profit purposes, as
 long as the original author gets the credits, and the copyright notice
 is not removed from the text. It may not be turned into a commercial
@@ -236,10 +236,10 @@ the job done, and to get the results to you. Especially Tom
 Christiansen and JGreely (for "parr") And Larry Wall, of course,
 without whom I would have spent lots of time annoying myself.
 
-CREDITS FOR TCL/TK REFERENCE GUIDE
+CREDITS FOR TCL/TK POCKET REFERENCE
 ==================================
 
-The Tcl/Tk Reference Guide is copyrighted by the author. It may be
+The Tcl/Tk Pocket Reference is copyrighted by the author. It may be
 reproduced, printed and distributed freely, as long as the original
 author gets the credits, and the copyright notice is not removed from
 the text. It may not be turned into a commercial product except with
@@ -256,20 +256,16 @@ written permission of the author.
 Thanks to Jeff Tranter for Tcl reference parts and of course
 John Ousterhout for creating Tcl and Tk.
 
-CREDITS FOR PERL/TK REFERENCE GUIDE
+CREDITS FOR PERL/TK POCKET REFERENCE
 ===================================
 
-I can't see how I can take credit for anything (-: This guide, of course, may
-be reproduced, printed and distributed freely under the same terms as Perl
-itself, but may not be used commercially without my permission.
+Thanks to Johan and Paul for allowing me to produce the Perk/Tk Pocket
+Reference.  And many thanks to Achim Bohnet in particular, who tenaciously
+reviewed this work as it evolved.  This guide, of course, may be reproduced,
+printed and distributed freely under the same terms as Perl itself, but may
+not be used commercially without my permission.
 
 ---------------------------- author info -----------------------------
 Stephen.O.Lidie@Lehigh.EDU
 Lehigh University Computing Center, USA
 ----------------------------------------------------------------------
-
--- PostScript is a trademark of Adobe, I assume.
-
-
-
-
